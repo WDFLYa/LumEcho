@@ -1,4 +1,4 @@
-package nuc.edu.lumecho.common;
+package nuc.edu.lumecho.common.Enum;
 
 import lombok.Getter;
 

@@ -1,6 +1,7 @@
 package nuc.edu.lumecho.common;
 
 import lombok.Data;
+import nuc.edu.lumecho.common.Enum.ResultCodeEnum;
 
 @Data
 public class Result<T> {
