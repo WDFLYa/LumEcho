@@ -1,0 +1,9 @@
+<update id="updateUser" parameterType="nuc.edu.lumecho.model.User">
+    UPDATE user
+    <set>
+        <if test="username != null">username = #{username},</if>
+        <if test="bio != null">bio = #{bio},</if>
+        <if test="email != null">email = #{email},</if>
+    </set>
+    WHERE id = #{id}
+</update>

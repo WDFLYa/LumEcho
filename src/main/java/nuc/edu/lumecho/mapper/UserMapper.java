@@ -25,8 +25,11 @@ public interface UserMapper {
     String selectPasswordByAccount(@Param("account") String account);
 
     @Select("SELECT id FROM user WHERE account = #{account}")
-    Integer selectUserIdByAccount(@Param("account") String account);
+    Long selectUserIdByAccount(@Param("account") String account);
 
     @Select("SELECT id FROM user WHERE phone = #{phone}")
-    Integer selectUserIdByPhone(@Param("phone") String phone);
+    Long selectUserIdByPhone(@Param("phone") String phone);
+
+    @Mapper
+    void updateUser(User user);
 }

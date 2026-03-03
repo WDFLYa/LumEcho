@@ -1,12 +1,12 @@
 package nuc.edu.lumecho.common;
 
 public class WdfUserContext {
-    private static final ThreadLocal<Integer> USER_ID = new ThreadLocal<>();
-    public static void setCurrentUserId(Integer userId) {
+    private static final ThreadLocal<Long> USER_ID = new ThreadLocal<>();
+    public static void setCurrentUserId(Long userId) {
         USER_ID.set(userId);
     }
 
-    public static Integer getCurrentUserId() {
+    public static Long getCurrentUserId() {
         return USER_ID.get();
     }
 

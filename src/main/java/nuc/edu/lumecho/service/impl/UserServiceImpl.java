@@ -11,7 +11,9 @@ import nuc.edu.lumecho.common.util.WdfTokenUtil;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.UserAccountLoginRequest;
 import nuc.edu.lumecho.model.dto.request.UserPhoneLoginRequest;
+import nuc.edu.lumecho.model.dto.request.UserUpdateRequest;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
+import nuc.edu.lumecho.model.entity.User;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultCodeEnum.ADMIN_PASSWORD_ERROR);
         }
 
-        Integer userId = userMapper.selectUserIdByAccount(account);
+        Long userId = userMapper.selectUserIdByAccount(account);
         String token = WdfTokenUtil.generateLoginToken();
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
@@ -69,7 +71,7 @@ public class UserServiceImpl implements UserService {
         if(!inputCode.equals(code)){
             throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
         }
-        Integer userId = userMapper.selectUserIdByPhone(phone);
+        Long userId = userMapper.selectUserIdByPhone(phone);
         String key = RedisKeyConstants.USER_TOKEN_KEY + userId;
         String token = WdfTokenUtil.generateLoginToken();
         LoginResponse loginResponse = new LoginResponse();
@@ -80,5 +82,15 @@ public class UserServiceImpl implements UserService {
         System.out.printf("登录成功");
         System.out.printf(WdfUserContext.getCurrentUserId().toString());
         return loginResponse;
+    }
+
+    @Override
+    public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
+        User user = new User();
+        user.setId(WdfUserContext.getCurrentUserId());
+        user.setUsername(userUpdateRequest.getUsername());
+        user.setBio(userUpdateRequest.getBio());
+        user.setEmail(userUpdateRequest.getEmail());
+        userMapper.updateUser(user);
     }
 }
