@@ -1,4 +1,4 @@
-package nuc.edu.lumecho.model.dto;
+package nuc.edu.lumecho.model.dto.request;
 
 import lombok.Data;
 

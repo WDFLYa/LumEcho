@@ -17,5 +17,4 @@ public final class WdfStringUtil {
     public static boolean isNotBlank(CharSequence str) {
         return StrUtil.isNotBlank(str);
     }
-
 }

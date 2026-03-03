@@ -5,6 +5,7 @@ import nuc.edu.lumecho.common.RedisKeyConstants;
 import nuc.edu.lumecho.common.exception.BusinessException;
 import nuc.edu.lumecho.common.util.WdfRandomCodeUtil;
 import nuc.edu.lumecho.mapper.UserMapper;
+import nuc.edu.lumecho.model.dto.request.SendCodeRequest;
 import nuc.edu.lumecho.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -21,7 +22,8 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Override
-    public void sendRegisterMessage(String phone) {
+    public void sendRegisterMessage(SendCodeRequest sendCodeRequest) {
+        String phone = sendCodeRequest.getPhone();
         if(userMapper.existsByPhone(phone)){
             throw new BusinessException(ResultCodeEnum.ADMIN_PHONE_EXIST_ERROR);
         }

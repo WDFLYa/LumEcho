@@ -20,4 +20,10 @@ public interface UserMapper {
             "VALUES (#{account}, #{phone}, #{password}, #{status}, #{createTime})"
     })
     void insert(User user);
+
+    @Select("SELECT password FROM user WHERE account = #{account}")
+    String selectPasswordByAccount(@Param("account") String account);
+
+    @Select("SELECT id FROM user WHERE account = #{account}")
+    Integer selectUserIdByAccount(@Param("account") String account);
 }

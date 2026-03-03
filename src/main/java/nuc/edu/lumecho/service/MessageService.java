@@ -1,5 +1,7 @@
 package nuc.edu.lumecho.service;
 
+import nuc.edu.lumecho.model.dto.request.SendCodeRequest;
+
 public interface MessageService {
-    void sendRegisterMessage(String phone);
+    void sendRegisterMessage(SendCodeRequest sendCodeRequest);
 }
