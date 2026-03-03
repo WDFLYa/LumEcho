@@ -6,9 +6,11 @@ import nuc.edu.lumecho.common.RedisKeyConstants;
 import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.common.exception.BusinessException;
 import nuc.edu.lumecho.common.util.WdfMd5Util;
+import nuc.edu.lumecho.common.util.WdfStringUtil;
 import nuc.edu.lumecho.common.util.WdfTokenUtil;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.UserAccountLoginRequest;
+import nuc.edu.lumecho.model.dto.request.UserPhoneLoginRequest;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,33 @@ public class UserServiceImpl implements UserService {
         loginResponse.setUserId(userId);
 
         String key = RedisKeyConstants.USER_TOKEN_KEY + userId;
+        stringRedisTemplate.opsForValue().set(key,token,30, TimeUnit.MINUTES);
+        WdfUserContext.setCurrentUserId(userId);
+        System.out.printf("登录成功");
+        System.out.printf(WdfUserContext.getCurrentUserId().toString());
+        return loginResponse;
+    }
+
+    @Override
+    public LoginResponse loginByPhone(UserPhoneLoginRequest userPhoneLoginRequest) {
+        String phone = userPhoneLoginRequest.getPhone();
+        if(!userMapper.existsByPhone(phone)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_PHONE_NOT_EXIST_ERROR);
+        }
+        String inputCode = userPhoneLoginRequest.getCode();
+        String code = stringRedisTemplate.opsForValue().get(RedisKeyConstants.PHONE_LOGIN_CODE_KEY + phone);
+        if(WdfStringUtil.isBlank(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_NOT_FOUND);
+        }
+        if(!inputCode.equals(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
+        }
+        Integer userId = userMapper.selectUserIdByPhone(phone);
+        String key = RedisKeyConstants.USER_TOKEN_KEY + userId;
+        String token = WdfTokenUtil.generateLoginToken();
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setUserId(userId);
         stringRedisTemplate.opsForValue().set(key,token,30, TimeUnit.MINUTES);
         WdfUserContext.setCurrentUserId(userId);
         System.out.printf("登录成功");

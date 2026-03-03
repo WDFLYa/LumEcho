@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         }
         String phone = request.getPhone();
         String inputCode = request.getCode();
-        String key = RedisKeyConstants.PHONE_CODE_KEY + phone;
+        String key = RedisKeyConstants.PHONE_REGISTER_CODE_KEY + phone;
         String code = stringRedisTemplate.opsForValue().get(key);
         if (!inputCode.equals(code)){
             throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);

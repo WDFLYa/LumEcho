@@ -3,6 +3,7 @@ package nuc.edu.lumecho.controller.user;
 
 import nuc.edu.lumecho.common.Result;
 import nuc.edu.lumecho.model.dto.request.UserAccountLoginRequest;
+import nuc.edu.lumecho.model.dto.request.UserPhoneLoginRequest;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,9 @@ public class UserController {
         LoginResponse loginResponse = userService.loginByAccount(userAccountLoginRequest);
         return Result.ok(loginResponse);
     }
-
+    @PostMapping("login/phone")
+    public Result<LoginResponse> loginByPhone(@RequestBody @Valid UserPhoneLoginRequest userPhoneLoginRequest) {
+        LoginResponse loginResponse = userService.loginByPhone(userPhoneLoginRequest);
+        return Result.ok(loginResponse);
+    }
 }

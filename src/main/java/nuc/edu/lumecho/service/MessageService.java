@@ -4,4 +4,6 @@ import nuc.edu.lumecho.model.dto.request.SendCodeRequest;
 
 public interface MessageService {
     void sendRegisterMessage(SendCodeRequest sendCodeRequest);
+
+    void sendLoginMessage(SendCodeRequest sendCodeRequest);
 }

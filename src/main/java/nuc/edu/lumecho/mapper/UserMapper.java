@@ -26,4 +26,7 @@ public interface UserMapper {
 
     @Select("SELECT id FROM user WHERE account = #{account}")
     Integer selectUserIdByAccount(@Param("account") String account);
+
+    @Select("SELECT id FROM user WHERE phone = #{phone}")
+    Integer selectUserIdByPhone(@Param("phone") String phone);
 }

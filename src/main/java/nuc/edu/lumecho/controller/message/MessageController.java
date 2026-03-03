@@ -15,11 +15,16 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @PostMapping("/sendcode")
+    @PostMapping("/register/sendcode")
     public Result sendCodeByPhone(@RequestBody @Valid SendCodeRequest sendCodeRequest) {
         messageService.sendRegisterMessage(sendCodeRequest);
-        return Result.ok("验证码已发送");
+        return Result.ok("注册验证码已发送");
     }
 
+    @PostMapping("/login/sendcode")
+    public Result sendCodeLogin(@RequestBody @Valid SendCodeRequest sendCodeRequest) {
+        messageService.sendLoginMessage(sendCodeRequest);
+        return Result.ok("登录验证码已发送");
+    }
 
 }

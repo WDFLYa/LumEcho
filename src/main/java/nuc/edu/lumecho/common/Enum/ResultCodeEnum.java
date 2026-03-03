@@ -14,6 +14,7 @@ public enum ResultCodeEnum {
     REPEAT_SUBMIT(206, "重复提交"),
     DELETE_ERROR(207, "请先删除子集"),
 
+    ADMIN_PHONE_NOT_EXIST_ERROR(299, "手机号不存在"),
     ADMIN_PHONE_EXIST_ERROR(300,"手机号已存在"),
     ADMIN_ACCOUNT_EXIST_ERROR(301, "账号已存在"),
     ADMIN_CAPTCHA_CODE_ERROR(302, "验证码错误"),
