@@ -12,9 +12,12 @@ public interface UserMapper {
     @Select("SELECT COUNT(1) FROM user WHERE account = #{account}")
     boolean existsByAccount(@Param("account") String account);
 
+    @Select("SELECT COUNT(1) FROM user WHERE phone = #{phone}")
+    boolean existsByPhone(@Param("phone") String phone);
+
     @Insert({
-            "INSERT INTO user (account, password, status, create_time)",
-            "VALUES (#{account}, #{password}, #{status}, #{createTime})"
+            "INSERT INTO user (account, phone, password, status, create_time)",
+            "VALUES (#{account}, #{phone}, #{password}, #{status}, #{createTime})"
     })
     void insert(User user);
 }
