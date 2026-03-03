@@ -30,6 +30,5 @@ public interface UserMapper {
     @Select("SELECT id FROM user WHERE phone = #{phone}")
     Long selectUserIdByPhone(@Param("phone") String phone);
 
-    @Mapper
     void updateUser(User user);
 }

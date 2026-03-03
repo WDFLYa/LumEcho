@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
         loginResponse.setToken(token);
         loginResponse.setUserId(userId);
 
-        String key = RedisKeyConstants.USER_TOKEN_KEY + userId;
-        stringRedisTemplate.opsForValue().set(key,token,30, TimeUnit.MINUTES);
+        String key = RedisKeyConstants.USER_TOKEN_KEY + token;
+        stringRedisTemplate.opsForValue().set(key, String.valueOf(userId),30, TimeUnit.MINUTES);
         WdfUserContext.setCurrentUserId(userId);
         System.out.printf("登录成功");
         System.out.printf(WdfUserContext.getCurrentUserId().toString());
@@ -72,12 +72,13 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
         }
         Long userId = userMapper.selectUserIdByPhone(phone);
-        String key = RedisKeyConstants.USER_TOKEN_KEY + userId;
         String token = WdfTokenUtil.generateLoginToken();
+        String key = RedisKeyConstants.USER_TOKEN_KEY + token;
+        stringRedisTemplate.opsForValue().set(key, String.valueOf(userId),30, TimeUnit.MINUTES);
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
         loginResponse.setUserId(userId);
-        stringRedisTemplate.opsForValue().set(key,token,30, TimeUnit.MINUTES);
+
         WdfUserContext.setCurrentUserId(userId);
         System.out.printf("登录成功");
         System.out.printf(WdfUserContext.getCurrentUserId().toString());
@@ -91,6 +92,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userUpdateRequest.getUsername());
         user.setBio(userUpdateRequest.getBio());
         user.setEmail(userUpdateRequest.getEmail());
+        System.out.println(user.toString());
         userMapper.updateUser(user);
     }
 }
