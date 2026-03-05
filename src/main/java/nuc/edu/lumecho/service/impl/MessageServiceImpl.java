@@ -50,4 +50,19 @@ public class MessageServiceImpl implements MessageService {
         stringRedisTemplate.opsForValue().set(key,code,5,TimeUnit.MINUTES);
         System.out.printf(code);
     }
+
+    @Override
+    public void sendCompletePhoneMessage(SendCodeRequest sendCodeRequest) {
+        String phone = sendCodeRequest.getPhone();
+        if(userMapper.existsByPhone(phone)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_PHONE_EXIST_ERROR);
+        }
+        String key = RedisKeyConstants.PHONE_COMPLETE_CODE_KEY + phone;
+        if(stringRedisTemplate.hasKey(key)){
+            throw new BusinessException(ResultCodeEnum.APP_SENED_CODE);
+        }
+        String code = WdfRandomCodeUtil.generateSixDigitCode();
+        stringRedisTemplate.opsForValue().set(key,code,5,TimeUnit.MINUTES);
+        System.out.printf(code);
+    }
 }

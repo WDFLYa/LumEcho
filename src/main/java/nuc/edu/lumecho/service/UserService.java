@@ -1,8 +1,6 @@
 package nuc.edu.lumecho.service;
 
-import nuc.edu.lumecho.model.dto.request.UserAccountLoginRequest;
-import nuc.edu.lumecho.model.dto.request.UserPhoneLoginRequest;
-import nuc.edu.lumecho.model.dto.request.UserUpdateRequest;
+import nuc.edu.lumecho.model.dto.request.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 
 public interface UserService {
@@ -10,4 +8,6 @@ public interface UserService {
     LoginResponse loginByPhone(UserPhoneLoginRequest userPhoneLoginRequest);
     void updateUserInfo(UserUpdateRequest userUpdateRequest);
     void softDeleteCurrentUser();
+    void completeAccount(CompleteAccountRequest completeAccountRequest);
+    void completePhone(CompletePhoneRequest completePhoneRequest);
 }

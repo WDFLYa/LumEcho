@@ -27,4 +27,9 @@ public class MessageController {
         return Result.ok("登录验证码已发送");
     }
 
+    @PostMapping("/complete/sendcode")
+    public Result sendCodeComplete(@RequestBody @Valid SendCodeRequest sendCodeRequest) {
+        messageService.sendCompletePhoneMessage(sendCodeRequest);
+        return Result.ok("完善手机验证码已发送");
+    }
 }

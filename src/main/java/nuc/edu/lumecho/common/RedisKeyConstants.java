@@ -4,5 +4,6 @@ public class RedisKeyConstants {
 
     public static final String PHONE_REGISTER_CODE_KEY = "phone:register:code:";
     public static final String PHONE_LOGIN_CODE_KEY = "phone:login:code:";
+    public static final String PHONE_COMPLETE_CODE_KEY = "user:complete:code";
     public static final String USER_TOKEN_KEY = "user:token:";
 }

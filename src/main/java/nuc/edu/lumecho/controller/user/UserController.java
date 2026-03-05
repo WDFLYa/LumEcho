@@ -2,9 +2,7 @@ package nuc.edu.lumecho.controller.user;
 
 
 import nuc.edu.lumecho.common.Result;
-import nuc.edu.lumecho.model.dto.request.UserAccountLoginRequest;
-import nuc.edu.lumecho.model.dto.request.UserPhoneLoginRequest;
-import nuc.edu.lumecho.model.dto.request.UserUpdateRequest;
+import nuc.edu.lumecho.model.dto.request.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,18 @@ public class UserController {
     @PostMapping("delete")
     public Result deleteUser() {
         userService.softDeleteCurrentUser();
+        return Result.ok();
+    }
+
+    @PostMapping("complete/account")
+    public Result completeAccount(@RequestBody @Valid CompleteAccountRequest completeAccountRequest) {
+        userService.completeAccount(completeAccountRequest);
+        return Result.ok();
+    }
+
+    @PostMapping("complete/phone")
+    public Result completePhone(@RequestBody @Valid CompletePhoneRequest completePhoneRequest) {
+        userService.completePhone(completePhoneRequest);
         return Result.ok();
     }
 }

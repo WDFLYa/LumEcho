@@ -6,4 +6,6 @@ public interface MessageService {
     void sendRegisterMessage(SendCodeRequest sendCodeRequest);
 
     void sendLoginMessage(SendCodeRequest sendCodeRequest);
+
+    void sendCompletePhoneMessage(SendCodeRequest sendCodeRequest);
 }

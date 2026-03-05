@@ -8,6 +8,9 @@
     <update id="updateUser" parameterType="nuc.edu.lumecho.model.entity.User">
         UPDATE user
         <set>
+            <if test="account != null">account = #{account},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="phone != null">phone = #{phone},</if>
             <if test="username != null">username = #{username},</if>
             <if test="bio != null">bio = #{bio},</if>
             <if test="email != null">email = #{email},</if>

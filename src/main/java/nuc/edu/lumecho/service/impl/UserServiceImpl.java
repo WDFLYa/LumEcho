@@ -9,9 +9,7 @@ import nuc.edu.lumecho.common.util.WdfMd5Util;
 import nuc.edu.lumecho.common.util.WdfStringUtil;
 import nuc.edu.lumecho.common.util.WdfTokenUtil;
 import nuc.edu.lumecho.mapper.UserMapper;
-import nuc.edu.lumecho.model.dto.request.UserAccountLoginRequest;
-import nuc.edu.lumecho.model.dto.request.UserPhoneLoginRequest;
-import nuc.edu.lumecho.model.dto.request.UserUpdateRequest;
+import nuc.edu.lumecho.model.dto.request.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.model.entity.User;
 import nuc.edu.lumecho.service.UserService;
@@ -102,6 +100,39 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(WdfUserContext.getCurrentUserId());
         user.setDeletedAt(LocalDateTime.now());
+        userMapper.updateUser(user);
+    }
+
+    @Override
+    public void completeAccount(CompleteAccountRequest completeAccountRequest) {
+        User user = new User();
+        String account = completeAccountRequest.getAccount();
+        if(userMapper.existsByAccount(account)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_ACCOUNT_EXIST_ERROR);
+        }
+        user.setId(WdfUserContext.getCurrentUserId());
+        user.setAccount(account);
+        user.setPassword(WdfMd5Util.md5Encrypt(completeAccountRequest.getPassword()));
+        userMapper.updateUser(user);
+    }
+
+    @Override
+    public void completePhone(CompletePhoneRequest completePhoneRequest) {
+        String phone = completePhoneRequest.getPhone();
+        if(userMapper.existsByPhone(phone)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_PHONE_EXIST_ERROR);
+        }
+        String inputCode = completePhoneRequest.getCode();
+        String code = stringRedisTemplate.opsForValue().get(RedisKeyConstants.PHONE_COMPLETE_CODE_KEY + phone);
+        if(WdfStringUtil.isBlank(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_NOT_FOUND);
+        }
+        if(!inputCode.equals(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
+        }
+        User user = new User();
+        user.setId(WdfUserContext.getCurrentUserId());
+        user.setPhone(phone);
         userMapper.updateUser(user);
     }
 }
