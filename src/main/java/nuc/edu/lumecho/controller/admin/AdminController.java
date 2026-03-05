@@ -2,6 +2,8 @@ package nuc.edu.lumecho.controller.admin;
 
 import nuc.edu.lumecho.common.Result;
 import nuc.edu.lumecho.model.dto.request.RestoreUserRequest;
+import nuc.edu.lumecho.model.dto.request.UpdateUserRoleRequest;
+import nuc.edu.lumecho.model.dto.request.UpdateUserStatusRequest;
 import nuc.edu.lumecho.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,4 +26,15 @@ public class AdminController {
         return Result.ok();
     }
 
+    @PostMapping("update/status")
+    public Result updateUserStatus(@RequestBody @Valid UpdateUserStatusRequest updateUserStatusRequest) {
+        adminService.updateUserStatus(updateUserStatusRequest);
+        return Result.ok();
+    }
+
+    @PostMapping("update/role")
+    public Result updateUserRole(@RequestBody @Valid UpdateUserRoleRequest updateUserRoleRequest) {
+        adminService.updateUserRole(updateUserRoleRequest);
+        return Result.ok();
+    }
 }
