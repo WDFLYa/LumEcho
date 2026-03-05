@@ -21,13 +21,13 @@ public interface UserMapper {
     })
     void insert(User user);
 
-    @Select("SELECT password FROM user WHERE account = #{account}")
+    @Select("SELECT password FROM user WHERE account = #{account} AND deleted_at IS NULL")
     String selectPasswordByAccount(@Param("account") String account);
 
-    @Select("SELECT id FROM user WHERE account = #{account}")
+    @Select("SELECT id FROM user WHERE account = #{account} AND deleted_at IS NULL")
     Long selectUserIdByAccount(@Param("account") String account);
 
-    @Select("SELECT id FROM user WHERE phone = #{phone}")
+    @Select("SELECT id FROM user WHERE phone = #{phone} AND deleted_at IS NULL")
     Long selectUserIdByPhone(@Param("phone") String phone);
 
     void updateUser(User user);
