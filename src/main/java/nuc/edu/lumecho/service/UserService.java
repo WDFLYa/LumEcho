@@ -9,4 +9,5 @@ public interface UserService {
     LoginResponse loginByAccount(UserAccountLoginRequest userAccountLoginRequest);
     LoginResponse loginByPhone(UserPhoneLoginRequest userPhoneLoginRequest);
     void updateUserInfo(UserUpdateRequest userUpdateRequest);
+    void softDeleteCurrentUser();
 }

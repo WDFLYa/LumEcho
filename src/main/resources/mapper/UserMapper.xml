@@ -11,6 +11,9 @@
             <if test="username != null">username = #{username},</if>
             <if test="bio != null">bio = #{bio},</if>
             <if test="email != null">email = #{email},</if>
+            <if test="deletedAt != null or deletedAt == null">
+                deleted_at = #{deletedAt},
+            </if>
         </set>
         WHERE id = #{id}
     </update>

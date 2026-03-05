@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -93,6 +94,14 @@ public class UserServiceImpl implements UserService {
         user.setBio(userUpdateRequest.getBio());
         user.setEmail(userUpdateRequest.getEmail());
         System.out.println(user.toString());
+        userMapper.updateUser(user);
+    }
+
+    @Override
+    public void softDeleteCurrentUser() {
+        User user = new User();
+        user.setId(WdfUserContext.getCurrentUserId());
+        user.setDeletedAt(LocalDateTime.now());
         userMapper.updateUser(user);
     }
 }

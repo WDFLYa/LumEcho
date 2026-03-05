@@ -9,10 +9,10 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT COUNT(1) FROM user WHERE account = #{account}")
+    @Select("SELECT COUNT(1) FROM user WHERE account = #{account} AND deleted_at IS NULL")
     boolean existsByAccount(@Param("account") String account);
 
-    @Select("SELECT COUNT(1) FROM user WHERE phone = #{phone}")
+    @Select("SELECT COUNT(1) FROM user WHERE phone = #{phone} AND deleted_at IS NULL")
     boolean existsByPhone(@Param("phone") String phone);
 
     @Insert({

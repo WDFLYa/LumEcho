@@ -37,4 +37,10 @@ public class UserController {
         userService.updateUserInfo(userUpdateRequest);
         return Result.ok();
     }
+
+    @PostMapping("delete")
+    public Result deleteUser() {
+        userService.softDeleteCurrentUser();
+        return Result.ok();
+    }
 }
