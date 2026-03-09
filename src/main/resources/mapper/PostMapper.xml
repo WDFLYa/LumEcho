@@ -37,11 +37,14 @@
     </insert>
 
 
-    <update id="updateById">
+    <update id="updatePost">
         UPDATE posts
         <set>
             <if test="title != null">title = #{title},</if>
             <if test="content != null">content = #{content},</if>
+            <if test="deletedAt != null">
+                deleted_at = #{deletedAt},
+            </if>
             update_time = #{updateTime}
         </set>
         WHERE id = #{id}

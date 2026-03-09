@@ -1,6 +1,10 @@
 package nuc.edu.lumecho.service.impl;
 
+import nuc.edu.lumecho.common.Enum.PostStatusEnum;
+import nuc.edu.lumecho.mapper.PostMapper;
 import nuc.edu.lumecho.mapper.UserMapper;
+import nuc.edu.lumecho.model.dto.request.post.PostIdRequest;
+import nuc.edu.lumecho.model.dto.request.post.UpdatePostStatusRequest;
 import nuc.edu.lumecho.model.dto.request.user.RestoreUserRequest;
 import nuc.edu.lumecho.model.dto.request.user.UpdateUserRoleRequest;
 import nuc.edu.lumecho.model.dto.request.user.UpdateUserStatusRequest;
@@ -14,6 +18,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private PostMapper postMapper;
 
     @Override
     public void restoreUser(RestoreUserRequest restoreUserRequest) {
@@ -38,4 +45,11 @@ public class AdminServiceImpl implements AdminService {
         user.setRole(updateUserRoleRequest.getRole().getCode());
         userMapper.updateUser(user);
     }
+
+    @Override
+    public void updateStatus(UpdatePostStatusRequest updatePostStatusRequest) {
+        postMapper.updateStatus(updatePostStatusRequest.getId(), updatePostStatusRequest.getStatus().getCode());
+    }
+
+
 }

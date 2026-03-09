@@ -4,8 +4,11 @@ import nuc.edu.lumecho.common.Enum.PostStatusEnum;
 import nuc.edu.lumecho.common.Enum.PostTypeEnum;
 import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.mapper.PostMapper;
+
+import nuc.edu.lumecho.model.dto.request.post.PostIdRequest;
 import nuc.edu.lumecho.model.dto.request.post.PublishPostRequest;
 import nuc.edu.lumecho.model.dto.request.post.UpdatePostRequest;
+
 import nuc.edu.lumecho.model.entity.Post;
 import nuc.edu.lumecho.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ public class PostServiceImpl implements PostService {
         post.setLikeCount(0L);
         post.setCommentCount(0L);
         post.setPinned(false);
-        post.setPostStatus(PostStatusEnum.NORMAL.getValue());
+        post.setPostStatus(PostStatusEnum.NORMAL.getCode());
         post.setCreateTime(LocalDateTime.now());
         post.setUpdateTime(LocalDateTime.now());
         postMapper.insert(post);
@@ -43,6 +46,15 @@ public class PostServiceImpl implements PostService {
         post.setTitle(updatePostRequest.getTitle());
         post.setContent(updatePostRequest.getContent());
         post.setUpdateTime(LocalDateTime.now());
-        postMapper.updateById(post);
+        postMapper.updatePost(post);
     }
+
+    @Override
+    public void deletePost(PostIdRequest postIdRequest) {
+        Post post = postMapper.selectByIdAndUserId(postIdRequest.getId(), WdfUserContext.getCurrentUserId());
+        post.setDeletedAt(LocalDateTime.now());
+        postMapper.updatePost(post);
+    }
+
+
 }

@@ -53,4 +53,5 @@ public class UserController {
         userService.completePhone(completePhoneRequest);
         return Result.ok();
     }
+
 }

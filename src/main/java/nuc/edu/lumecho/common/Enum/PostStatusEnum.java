@@ -6,13 +6,13 @@ import lombok.Getter;
 public enum PostStatusEnum {
 
     NORMAL(1, "正常"),
-    BANNED(0, "封禁");
+    BANNED(2, "封禁");
 
-    private final int value;
+    private final int code;
     private final String description;
 
-    PostStatusEnum(int value, String description) {
-        this.value = value;
+    PostStatusEnum(int code, String description) {
+        this.code = code;
         this.description = description;
     }
 
