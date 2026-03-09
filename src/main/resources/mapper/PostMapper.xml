@@ -36,4 +36,17 @@
                 #{deletedAt})
     </insert>
 
+
+    <update id="updateById">
+        UPDATE posts
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="content != null">content = #{content},</if>
+            update_time = #{updateTime}
+        </set>
+        WHERE id = #{id}
+        AND user_id = #{userId}
+        AND deleted_at IS NULL
+    </update>
+
 </mapper>
