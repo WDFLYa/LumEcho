@@ -2,7 +2,7 @@ package nuc.edu.lumecho.controller.user;
 
 
 import nuc.edu.lumecho.common.Result;
-import nuc.edu.lumecho.model.dto.request.*;
+import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

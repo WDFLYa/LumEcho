@@ -1,4 +1,4 @@
-package nuc.edu.lumecho.model.dto.request;
+package nuc.edu.lumecho.model.dto.request.user;
 
 import lombok.Data;
 import nuc.edu.lumecho.common.Enum.UserRoleEnum;

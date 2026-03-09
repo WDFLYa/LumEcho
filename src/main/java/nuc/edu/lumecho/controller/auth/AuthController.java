@@ -2,8 +2,8 @@ package nuc.edu.lumecho.controller.auth;
 
 
 import nuc.edu.lumecho.common.Result;
-import nuc.edu.lumecho.model.dto.request.UserAccountRegisterRequest;
-import nuc.edu.lumecho.model.dto.request.UserPhoneRegisterRequest;
+import nuc.edu.lumecho.model.dto.request.user.UserAccountRegisterRequest;
+import nuc.edu.lumecho.model.dto.request.user.UserPhoneRegisterRequest;
 import nuc.edu.lumecho.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,6 +1,5 @@
 package nuc.edu.lumecho.service.impl;
 
-import lombok.val;
 import nuc.edu.lumecho.common.Enum.ResultCodeEnum;
 import nuc.edu.lumecho.common.RedisKeyConstants;
 import nuc.edu.lumecho.common.WdfUserContext;
@@ -9,7 +8,7 @@ import nuc.edu.lumecho.common.util.WdfMd5Util;
 import nuc.edu.lumecho.common.util.WdfStringUtil;
 import nuc.edu.lumecho.common.util.WdfTokenUtil;
 import nuc.edu.lumecho.mapper.UserMapper;
-import nuc.edu.lumecho.model.dto.request.*;
+import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.model.entity.User;
 import nuc.edu.lumecho.service.UserService;

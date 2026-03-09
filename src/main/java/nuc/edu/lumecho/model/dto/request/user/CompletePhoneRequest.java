@@ -1,4 +1,4 @@
-package nuc.edu.lumecho.model.dto.request;
+package nuc.edu.lumecho.model.dto.request.user;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class UserPhoneLoginRequest {
+public class CompletePhoneRequest {
     @NotBlank(message = "手机号不能为空")
     @Pattern(
             regexp = "^1[3-9]\\d{9}$",

@@ -1,6 +1,6 @@
 package nuc.edu.lumecho.service;
 
-import nuc.edu.lumecho.model.dto.request.*;
+import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 
 public interface UserService {
