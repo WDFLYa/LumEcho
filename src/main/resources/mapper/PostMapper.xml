@@ -59,24 +59,22 @@
         p.like_count AS likes,
         p.comment_count AS comments,
         p.view_count AS views,
-        p.create_time,
-
+        p.create_time AS createTime,
         u.username,
-
         avatar_res.file_url AS avatar,
-
-        cover_res.file_url AS cover
-
+        cover_res.file_url AS cover,
+        c.name AS category
         FROM posts p
         INNER JOIN user u ON p.user_id = u.id
+        INNER JOIN categories c ON p.category_id = c.id
         LEFT JOIN resource_file avatar_res
         ON avatar_res.biz_type = 'AVATAR'
         AND avatar_res.biz_id = p.user_id
         LEFT JOIN resource_file cover_res
         ON cover_res.biz_type = 'POST_COVER'
         AND cover_res.biz_id = p.id
-
-        WHERE p.deleted_at IS NULL
+        WHERE
+        p.deleted_at IS NULL
         ORDER BY p.create_time DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
