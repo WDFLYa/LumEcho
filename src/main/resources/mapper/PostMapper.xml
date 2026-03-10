@@ -75,7 +75,72 @@
         AND cover_res.biz_id = p.id
         WHERE
         p.deleted_at IS NULL
+        <if test="userId != null">
+            AND p.user_id = #{userId}
+        </if>
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
         ORDER BY p.create_time DESC
         LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 按热度排序 -->
+    <select id="selectHomePostsByHot" resultType="nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse">
+        SELECT
+        p.id,
+        p.title,
+        p.like_count AS likes,
+        p.comment_count AS comments,
+        p.view_count AS views,
+        p.create_time AS createTime,
+        u.username,
+        avatar_res.file_url AS avatar,
+        cover_res.file_url AS cover,
+        c.name AS category,
+
+        <!-- 热度分计算（可调参数） -->
+        (
+        p.view_count * 0.1 +
+        p.like_count * 1.0 +
+        p.comment_count * 2.0
+        ) / POW(
+        (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(p.create_time)) / 3600 + 2,
+        1.5
+        ) AS hot_score
+
+        FROM posts p
+        INNER JOIN user u ON p.user_id = u.id
+        INNER JOIN categories c ON p.category_id = c.id
+        LEFT JOIN resource_file avatar_res
+        ON avatar_res.biz_type = 'AVATAR' AND avatar_res.biz_id = p.user_id
+        LEFT JOIN resource_file cover_res
+        ON cover_res.biz_type = 'POST_COVER' AND cover_res.biz_id = p.id
+        WHERE
+        p.deleted_at IS NULL
+        <if test="userId != null">
+            AND p.user_id = #{userId}
+        </if>
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
+        ORDER BY hot_score DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countValidPosts" resultType="long">
+        SELECT COUNT(1)
+        FROM posts p
+        INNER JOIN categories c ON p.category_id = c.id
+        WHERE
+        p.deleted_at IS NULL
+        AND p.post_status = 1
+        AND c.status = 1
+        <if test="userId != null">
+            AND p.user_id = #{userId}
+        </if>
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
     </select>
 </mapper>

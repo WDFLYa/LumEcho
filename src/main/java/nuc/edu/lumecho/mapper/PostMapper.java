@@ -26,12 +26,20 @@ public interface PostMapper {
 
 
     List<PostHomeItemResponse> selectHomePosts(
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId,
             @Param("offset") int offset,
             @Param("limit") int limit
     );
 
-    @Select("SELECT COUNT(1) FROM posts WHERE deleted_at IS NULL")
-    long countValidPosts();
+    List<PostHomeItemResponse> selectHomePostsByHot(
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    long countValidPosts(@Param("userId") Long userId, @Param("categoryId") Long categoryId);
 
 
 }

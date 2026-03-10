@@ -19,4 +19,9 @@ public interface PostService {
             @Param("offset") int offset,
             @Param("limit") int limit
     );
+
+    PostHomePageResponse selectHomePostsByHot(
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
 }

@@ -45,12 +45,24 @@ public class PostController {
 
     @GetMapping("/select/all")
     public Result<PostHomePageResponse> getHomePosts(
+            @RequestParam(defaultValue = "time") String sort,
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit) {
+
+        if (!"time".equals(sort) && !"hot".equals(sort)) {
+            sort = "time";
+        }
+
         if (limit > 50) limit = 50;
         if (offset < 0) offset = 0;
 
-        PostHomePageResponse postHomePageResponse = postService.selectHomePosts(offset, limit);
+        PostHomePageResponse postHomePageResponse;
+        if ("hot".equals(sort)) {
+            postHomePageResponse = postService.selectHomePostsByHot(offset, limit);
+        } else {
+            postHomePageResponse = postService.selectHomePosts(offset, limit);
+        }
+
         return Result.ok(postHomePageResponse);
     }
 

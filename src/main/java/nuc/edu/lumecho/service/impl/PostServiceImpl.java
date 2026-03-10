@@ -99,7 +99,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostHomePageResponse selectHomePosts(int offset, int limit) {
-        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(offset, limit);
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(null,null,offset, limit);
         for (PostHomeItemResponse item : postHomeItemResponses) {
             LocalDateTime createdTime = item.getCreateTime();
             if (createdTime != null) {
@@ -109,7 +109,31 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        long total = postMapper.countValidPosts();
+        long total = postMapper.countValidPosts(null, null);
+
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
+    @Override
+    public PostHomePageResponse selectHomePostsByHot(int offset, int limit) {
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePostsByHot(null,null,offset, limit);
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        long total = postMapper.countValidPosts(null, null);
 
         boolean hasMore = (offset + postHomeItemResponses.size()) < total;
 
