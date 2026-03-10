@@ -1,10 +1,13 @@
 package nuc.edu.lumecho.mapper;
 
+import nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse;
 import nuc.edu.lumecho.model.entity.Post;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface PostMapper {
@@ -17,4 +20,18 @@ public interface PostMapper {
 
     @Update("UPDATE posts SET post_status = #{status} WHERE id = #{id}")
     void updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
+    @Select("SELECT * FROM posts WHERE id = #{id} AND deleted_at IS NULL")
+    Post selectById(@Param("id") Long id);
+
+
+    List<PostHomeItemResponse> selectHomePosts(
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    @Select("SELECT COUNT(1) FROM posts WHERE deleted_at IS NULL")
+    long countValidPosts();
+
+
 }

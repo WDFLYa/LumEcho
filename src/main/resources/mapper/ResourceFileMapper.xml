@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nuc.edu.lumecho.mapper.ResourceFileMapper">
+
+<select id="selectByBizIdAndTypes" resultType="nuc.edu.lumecho.model.entity.ResourceFile">
+    SELECT *
+    FROM resource_file
+    WHERE biz_id = #{bizId}
+    AND biz_type IN
+    <foreach collection="bizTypes" item="type" open="(" separator="," close=")">
+        #{type}
+    </foreach>
+</select>
+
+</mapper>
