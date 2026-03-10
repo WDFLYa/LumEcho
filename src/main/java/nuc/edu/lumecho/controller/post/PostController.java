@@ -47,7 +47,7 @@ public class PostController {
     public Result<PostHomePageResponse> getHomePosts(
             @RequestParam(defaultValue = "time") String sort,
             @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "10") int limit) {
+            @RequestParam(defaultValue = "8") int limit) {
 
         if (!"time".equals(sort) && !"hot".equals(sort)) {
             sort = "time";

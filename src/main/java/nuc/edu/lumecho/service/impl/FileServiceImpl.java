@@ -19,7 +19,7 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private MinioClient minioClient;
 
-    @Value("${minio.bucket}")
+    @Value("${spring.minio.bucket}")
     private String bucket;
 
     public String uploadFile(MultipartFile file, String bizType) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
