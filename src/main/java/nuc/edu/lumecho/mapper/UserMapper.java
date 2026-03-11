@@ -1,10 +1,13 @@
 package nuc.edu.lumecho.mapper;
 
+import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface UserMapper {
@@ -31,4 +34,9 @@ public interface UserMapper {
     Long selectUserIdByPhone(@Param("phone") String phone);
 
     void updateUser(User user);
+
+    @Select("SELECT id, name, avatar FROM user WHERE id = #{id} AND deleted_at IS NULL")
+    UserBaseInfoResponse selectUserBaseInfoById(@Param("id") Long id);
+
+    List<UserBaseInfoResponse> selectUserBaseInfoByIds(@Param("ids") List<Long> ids);
 }
