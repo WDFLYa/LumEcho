@@ -5,8 +5,7 @@ import nuc.edu.lumecho.common.Result;
 import nuc.edu.lumecho.model.entity.Category;
 import nuc.edu.lumecho.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,17 +16,20 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @GetMapping("/getAllCategories")
     public Result<List< Category>> getAllCategories() {
         List<Category> categories = categoryService.getAllCategories();
         return Result.ok(categories);
     }
 
-    public Result insertCategory(Category category) {
+    @PostMapping("/insertCategory")
+    public Result insertCategory(@RequestBody Category category) {
         categoryService.insertCategory(category);
         return Result.ok();
     }
 
-    public Result updateCategory(Category category) {
+    @PostMapping("/updateCategory")
+    public Result updateCategory(@RequestBody Category category) {
         categoryService.updateCategory(category);
         return Result.ok();
     }
