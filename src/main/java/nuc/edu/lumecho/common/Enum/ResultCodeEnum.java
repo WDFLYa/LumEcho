@@ -38,8 +38,9 @@ public enum ResultCodeEnum {
 
 
     TOKEN_EXPIRED(601, "token过期"),
-    TOKEN_INVALID(602, "token非法");
+    TOKEN_INVALID(602, "token非法"),
 
+    PHOTOGRAPHER_APPLY_EXISTS(701, "您已提交过摄影师认证申请，请勿重复提交");
 
     private final Integer code;
 
