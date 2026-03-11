@@ -6,11 +6,14 @@ import nuc.edu.lumecho.model.dto.request.post.PublishPostRequest;
 import nuc.edu.lumecho.model.dto.request.post.UpdatePostRequest;
 import nuc.edu.lumecho.model.dto.response.post.PostDetailResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomePageResponse;
+import nuc.edu.lumecho.service.PostLikeService;
 import nuc.edu.lumecho.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/post")
@@ -18,6 +21,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostLikeService postLikeService;
 
     @RequestMapping("/publish")
     public Result publishPost(@RequestBody @Valid PublishPostRequest publishPostRequest) {
@@ -66,4 +72,21 @@ public class PostController {
         return Result.ok(postHomePageResponse);
     }
 
+    @PostMapping("/{postId}/like")
+    public Result<Void> toggleLike(@PathVariable Long postId) {
+        postLikeService.toggleLike(postId);
+        return Result.ok();
+    }
+
+    @GetMapping("/{postId}/like-status")
+    public Result<Boolean> getLikeStatus(@PathVariable Long postId) {
+        boolean liked = postLikeService.isLiked(postId);
+        return Result.ok(liked);
+    }
+
+    @GetMapping("/likes/statuses")
+    public Result<Map<Long, Boolean>> getLikeStatuses(@RequestParam List<Long> postIds) {
+        Map<Long, Boolean> statuses = postLikeService.getLikeStatuses(postIds);
+        return Result.ok(statuses);
+    }
 }

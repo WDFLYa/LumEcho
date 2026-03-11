@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/comment")
@@ -22,6 +23,16 @@ public class CommentController {
     public Result insertComment(@RequestBody @Valid CreateCommentRequest createCommentRequest) {
         commentService.createComment(createCommentRequest);
         return Result.ok();
+    }
+
+    @GetMapping("/{postId}/comments")
+    public Result<Map<String, Object>> getComments(
+            @PathVariable Long postId,
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer size) {
+
+        Map<String, Object> data = commentService.getCommentTreeWithPagination(postId, page, size);
+        return Result.ok(data);
     }
 
     @GetMapping("/post/{postId}")

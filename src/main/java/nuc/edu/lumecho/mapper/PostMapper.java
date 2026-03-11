@@ -42,4 +42,13 @@ public interface PostMapper {
     long countValidPosts(@Param("userId") Long userId, @Param("categoryId") Long categoryId);
 
 
+    @Update("UPDATE posts SET comment_count = comment_count + 1 WHERE id = #{postId}")
+    void incrementCommentCount(@Param("postId") Long postId);
+
+    @Update("UPDATE posts SET like_count = like_count + 1 WHERE id = #{postId}")
+    void incrementLikeCount(@Param("postId") Long postId);
+
+    @Update("UPDATE posts SET like_count = like_count - 1 WHERE id = #{postId} AND like_count > 0")
+    void decrementLikeCount(@Param("postId") Long postId);
+
 }
