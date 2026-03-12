@@ -35,7 +35,6 @@ public interface UserMapper {
 
     void updateUser(User user);
 
-    @Select("SELECT id, name, avatar FROM user WHERE id = #{id} AND deleted_at IS NULL")
     UserBaseInfoResponse selectUserBaseInfoById(@Param("id") Long id);
 
     List<UserBaseInfoResponse> selectUserBaseInfoByIds(@Param("ids") List<Long> ids);

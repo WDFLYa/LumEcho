@@ -1,9 +1,12 @@
 package nuc.edu.lumecho.controller.activityapplication;
 
 import nuc.edu.lumecho.common.Result;
+import nuc.edu.lumecho.model.entity.ActivityApplication;
 import nuc.edu.lumecho.service.ActivityApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/activityapplication")
@@ -34,6 +37,11 @@ public class ActivityApplicationController {
     public Result reject(@PathVariable Long applicationId) {
         activityApplicationService.rejectApplication(applicationId);
         return Result.ok();
+    }
+
+    @GetMapping("/applications/listall")
+    public Result<List<ActivityApplication>> list() {
+        return Result.ok(activityApplicationService.listAll());
     }
 
 }

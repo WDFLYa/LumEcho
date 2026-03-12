@@ -8,6 +8,8 @@ import nuc.edu.lumecho.service.ActivityApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ActivityApplicationImpl implements ActivityApplicationService {
 
@@ -36,5 +38,10 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
     @Override
     public void rejectApplication(Long applicationId) {
         activityApplicationMapper.updateStatus(applicationId,ActivityApplicationStatusEnum.REJECTED.getCode());
+    }
+
+    @Override
+    public List<ActivityApplication> listAll() {
+        return activityApplicationMapper.listAll();
     }
 }

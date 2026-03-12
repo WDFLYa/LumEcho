@@ -1,5 +1,9 @@
 package nuc.edu.lumecho.service;
 
+import nuc.edu.lumecho.model.entity.ActivityApplication;
+
+import java.util.List;
+
 public interface ActivityApplicationService {
     void createActivityApplication(Long activityId);
 
@@ -8,4 +12,6 @@ public interface ActivityApplicationService {
     void approveApplication(Long applicationId);
 
     void rejectApplication(Long applicationId);
+
+    List<ActivityApplication> listAll();
 }

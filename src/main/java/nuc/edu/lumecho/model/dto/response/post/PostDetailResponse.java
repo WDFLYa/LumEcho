@@ -8,8 +8,11 @@ import java.util.List;
 @Data
 public class PostDetailResponse {
     private Long id;
+    private String username;
+    private String avatar;
     private String title;
     private String content;
+    private String categoryName;
     private Long userId;
     private LocalDateTime createTime;
     private List<String> imageUrls;

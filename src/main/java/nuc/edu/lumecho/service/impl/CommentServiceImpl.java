@@ -128,15 +128,17 @@ public class CommentServiceImpl implements CommentService {
         int total = commentMapper.countTopLevelComments(postId);
 
         List<CommentNode> result = new ArrayList<>();
+
+        // 即使没有一级评论，也建议返回空列表结构，避免前端报错，但这里逻辑保持原样
         if (!topLevelComments.isEmpty()) {
-            // 2. 查询该帖子的所有子评论（不分页）
+            // 2. 查询该帖子的所有子评论（不分页，为了构建树必须查全）
             List<Comment> allChildComments = commentMapper.selectAllChildComments(postId);
 
             // 3. 合并所有评论（一级 + 子级）
             List<Comment> allComments = new ArrayList<>(topLevelComments);
             allComments.addAll(allChildComments);
 
-            // 4. 构建 commentMap 和 userMap（复用你原有的逻辑）
+            // 4. 构建 commentMap 和 userMap
             Map<Long, Comment> commentMap = allComments.stream()
                     .collect(Collectors.toMap(Comment::getId, c -> c));
 
@@ -145,7 +147,7 @@ public class CommentServiceImpl implements CommentService {
             Map<Long, UserBaseInfoResponse> userMap = users.stream()
                     .collect(Collectors.toMap(UserBaseInfoResponse::getId, u -> u));
 
-            // 5. 构建 nodeMap
+            // 5. 构建 nodeMap (🔴 核心修改在这里)
             Map<Long, CommentNode> nodeMap = new HashMap<>();
             for (Comment comment : allComments) {
                 CommentNode node = new CommentNode();
@@ -154,6 +156,7 @@ public class CommentServiceImpl implements CommentService {
                 node.setContent(comment.getContent());
                 node.setCreateTimeAgo(formatTimeAgo(comment.getCreateTime()));
 
+                // 设置当前评论者信息
                 UserBaseInfoResponse user = userMap.get(comment.getUserId());
                 if (user != null) {
                     node.setUsername(user.getUsername());
@@ -162,6 +165,25 @@ public class CommentServiceImpl implements CommentService {
                     node.setUsername("已注销");
                     node.setAvatar("/default-avatar.png");
                 }
+
+                // 🔴 新增逻辑：如果是子评论，填充 targetUserId 和 targetUsername
+                if (comment.getParentId() != null) {
+                    // 从 map 中获取父评论对象
+                    Comment parentComment = commentMap.get(comment.getParentId());
+                    if (parentComment != null) {
+                        // 设置被回复者的 ID (Long 类型)
+                        node.setTargetUserId(parentComment.getUserId());
+
+                        // 设置被回复者的名字
+                        UserBaseInfoResponse parentUser = userMap.get(parentComment.getUserId());
+                        if (parentUser != null) {
+                            node.setTargetUsername(parentUser.getUsername());
+                        } else {
+                            node.setTargetUsername("已注销用户");
+                        }
+                    }
+                }
+
                 nodeMap.put(comment.getId(), node);
             }
 
@@ -169,12 +191,14 @@ public class CommentServiceImpl implements CommentService {
             List<CommentNode> roots = new ArrayList<>();
             for (Comment top : topLevelComments) {
                 CommentNode node = nodeMap.get(top.getId());
-                // 找到它的所有后代（递归已在 nodeMap 中）
-                attachChildren(node, nodeMap, commentMap);
-                roots.add(node);
+                if (node != null) {
+                    // 递归挂载子评论
+                    attachChildren(node, nodeMap, commentMap);
+                    roots.add(node);
+                }
             }
 
-            // 7. 排序：一级倒序，子级升序（复用你原有逻辑）
+            // 7. 排序：一级倒序，子级升序
             roots.sort((a, b) -> {
                 LocalDateTime timeA = commentMap.get(a.getId()).getCreateTime();
                 LocalDateTime timeB = commentMap.get(b.getId()).getCreateTime();
@@ -198,7 +222,7 @@ public class CommentServiceImpl implements CommentService {
         return response;
     }
 
-    // 辅助方法：递归挂载子评论（避免循环引用）
+    // 辅助方法：递归挂载子评论
     private void attachChildren(CommentNode parent, Map<Long, CommentNode> nodeMap, Map<Long, Comment> commentMap) {
         List<Comment> children = commentMap.values().stream()
                 .filter(c -> Objects.equals(c.getParentId(), parent.getId()))
@@ -208,7 +232,8 @@ public class CommentServiceImpl implements CommentService {
         for (Comment child : children) {
             CommentNode childNode = nodeMap.get(child.getId());
             if (childNode != null) {
-                attachChildren(childNode, nodeMap, commentMap); // 递归
+                // 递归处理下一层
+                attachChildren(childNode, nodeMap, commentMap);
                 parent.getChildren().add(childNode);
             }
         }

@@ -10,11 +10,14 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
 
-    @Select("SELECT * FROM category WHERE status = 1")
+    @Select("SELECT * FROM categories WHERE status = 1")
     List<Category> getAllCategories();
 
-    @Insert("INSERT INTO category (name, status) VALUES (#{name}, #{status})")
+    @Insert("INSERT INTO categories (name, status) VALUES (#{name}, #{status})")
     void insertCategory(Category category);
 
     void updateCategory(Category category);
+
+    @Select("SELECT name FROM categories WHERE id = #{id}")
+    String selectCategoryNameById(Long id);
 }

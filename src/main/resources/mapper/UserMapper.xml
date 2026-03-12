@@ -40,5 +40,18 @@
         AND u.deleted_at IS NULL
     </select>
 
+    <select id="selectUserBaseInfoById" resultType="nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse">
+        SELECT
+        u.id,
+        u.username,
+        rf.file_url AS avatar
+        FROM user u
+        LEFT JOIN resource_file rf
+        ON rf.biz_id = u.id
+        AND rf.biz_type = 'AVATAR'
+        WHERE u.id = #{id}
+        AND u.deleted_at IS NULL
+        LIMIT 1
+    </select>
 
 </mapper>

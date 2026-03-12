@@ -4,9 +4,11 @@ import nuc.edu.lumecho.common.Enum.PostStatusEnum;
 import nuc.edu.lumecho.common.Enum.PostTypeEnum;
 import nuc.edu.lumecho.common.Enum.ResourceTypeEnum;
 import nuc.edu.lumecho.common.WdfUserContext;
+import nuc.edu.lumecho.mapper.CategoryMapper;
 import nuc.edu.lumecho.mapper.PostMapper;
 
 import nuc.edu.lumecho.mapper.ResourceFileMapper;
+import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.post.PostIdRequest;
 import nuc.edu.lumecho.model.dto.request.post.PublishPostRequest;
 import nuc.edu.lumecho.model.dto.request.post.UpdatePostRequest;
@@ -14,6 +16,7 @@ import nuc.edu.lumecho.model.dto.request.post.UpdatePostRequest;
 import nuc.edu.lumecho.model.dto.response.post.PostDetailResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomePageResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.entity.Post;
 import nuc.edu.lumecho.model.entity.ResourceFile;
 import nuc.edu.lumecho.service.PostService;
@@ -33,6 +36,12 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private ResourceFileMapper resourceFileMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
 
     @Override
     public void publishPost(PublishPostRequest publishPostRequest) {
@@ -93,6 +102,10 @@ public class PostServiceImpl implements PostService {
 
         postDetailResponse.setImageUrls(imageUrls);
         postDetailResponse.setVideoUrls(videoUrls);
+        UserBaseInfoResponse userBaseInfoResponse = userMapper.selectUserBaseInfoById(post.getUserId());
+        postDetailResponse.setUsername(userBaseInfoResponse.getUsername());
+        postDetailResponse.setAvatar(userBaseInfoResponse.getAvatar());
+        postDetailResponse.setCategoryName(categoryMapper.selectCategoryNameById(post.getCategoryId()));
 
         return postDetailResponse;
     }
