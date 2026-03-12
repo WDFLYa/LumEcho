@@ -2,6 +2,8 @@ package nuc.edu.lumecho.service;
 
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserService {
     LoginResponse loginByAccount(UserAccountLoginRequest userAccountLoginRequest);
@@ -10,4 +12,5 @@ public interface UserService {
     void softDeleteCurrentUser();
     void completeAccount(CompleteAccountRequest completeAccountRequest);
     void completePhone(CompletePhoneRequest completePhoneRequest);
+    UserBaseInfoResponse selectUserBaseInfoById();
 }

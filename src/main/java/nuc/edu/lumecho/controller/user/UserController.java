@@ -4,12 +4,10 @@ package nuc.edu.lumecho.controller.user;
 import nuc.edu.lumecho.common.Result;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -54,4 +52,8 @@ public class UserController {
         return Result.ok();
     }
 
+    @GetMapping("getuserinfo")
+    public Result<UserBaseInfoResponse> selectUserBaseInfoById(){
+        return Result.ok(userService.selectUserBaseInfoById());
+    }
 }

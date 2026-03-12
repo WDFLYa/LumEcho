@@ -10,6 +10,7 @@ import nuc.edu.lumecho.common.util.WdfTokenUtil;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,5 +134,10 @@ public class UserServiceImpl implements UserService {
         user.setId(WdfUserContext.getCurrentUserId());
         user.setPhone(phone);
         userMapper.updateUser(user);
+    }
+
+    @Override
+    public UserBaseInfoResponse selectUserBaseInfoById() {
+        return userMapper.selectUserBaseInfoById(WdfUserContext.getCurrentUserId());
     }
 }
