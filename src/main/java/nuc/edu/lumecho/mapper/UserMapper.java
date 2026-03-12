@@ -39,4 +39,7 @@ public interface UserMapper {
     UserBaseInfoResponse selectUserBaseInfoById(@Param("id") Long id);
 
     List<UserBaseInfoResponse> selectUserBaseInfoByIds(@Param("ids") List<Long> ids);
+
+    @Select("SELECT role FROM user WHERE id = #{id} AND deleted_at IS NULL")
+    String getUserRoleById(@Param("id") Long id);
 }
