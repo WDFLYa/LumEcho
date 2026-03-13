@@ -84,8 +84,8 @@ public class PostController {
         return Result.ok(liked);
     }
 
-    @GetMapping("/likes/statuses")
-    public Result<Map<Long, Boolean>> getLikeStatuses(@RequestParam List<Long> postIds) {
+    @PostMapping("/likes/statuses")
+    public Result<Map<Long, Boolean>> getLikeStatuses(@RequestBody List<Long> postIds) {
         Map<Long, Boolean> statuses = postLikeService.getLikeStatuses(postIds);
         return Result.ok(statuses);
     }

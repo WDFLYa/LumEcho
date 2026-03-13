@@ -41,7 +41,9 @@ public enum ResultCodeEnum {
     TOKEN_INVALID(602, "token非法"),
 
     PHOTOGRAPHER_APPLY_EXISTS(701, "您已提交过摄影师认证申请，请勿重复提交"),
-    NOT_PHOTOGRAPHER(702, "您不是摄影师");
+    NOT_PHOTOGRAPHER(702, "您不是摄影师"),
+    CHALLENGE_PUBLISH_FORBIDDEN(703, "权限不足：仅管理员或摄影师可发布挑战赛");
+
     private final Integer code;
 
     private final String message;
