@@ -25,4 +25,5 @@ public class ChallengeController {
             List<Challenge> challenges = challengeService.getChallengeList(status);
             return Result.ok(challenges);
     }
+
 }

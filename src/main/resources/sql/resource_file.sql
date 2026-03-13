@@ -1,9 +1,14 @@
+-- 1. 如果表已存在，先删除
+DROP TABLE IF EXISTS resource_file;
+
+-- 2. 创建新表
 CREATE TABLE resource_file
 (
     id           BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键ID',
 
+    -- 【关键修改】这里去掉了 NOT NULL 约束，允许初始为 NULL
     biz_type     VARCHAR(32)  NOT NULL COMMENT '业务类型（代码枚举）：AVATAR, POST_IMAGE, POST_VIDEO等',
-    biz_id       BIGINT       NOT NULL COMMENT '关联的业务ID（如用户ID、帖子ID）',
+    biz_id       BIGINT                DEFAULT NULL COMMENT '关联的业务ID（如用户ID、帖子ID），未关联时为NULL',
 
     file_url     VARCHAR(512) NOT NULL COMMENT 'MinIO 完整可访问URL',
     file_name    VARCHAR(255) NOT NULL COMMENT '原始文件名（如 avatar.jpg）',

@@ -16,4 +16,5 @@ public class PublishPostRequest {
 
     @NotNull(message = "请选择分类")
     private Long categoryId;
+
 }
