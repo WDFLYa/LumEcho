@@ -40,4 +40,5 @@ public class CommentController {
         List<CommentNode> commentTree = commentService.getCommentTree(postId);
         return Result.ok(commentTree);
     }
+
 }

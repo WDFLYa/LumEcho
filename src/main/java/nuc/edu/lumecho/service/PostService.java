@@ -5,6 +5,7 @@ import nuc.edu.lumecho.model.dto.request.post.UpdatePostRequest;
 import nuc.edu.lumecho.model.dto.response.post.PostDetailResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomePageResponse;
+import nuc.edu.lumecho.model.dto.response.post.PostProfileResponse;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -24,4 +25,11 @@ public interface PostService {
             @Param("offset") int offset,
             @Param("limit") int limit
     );
+
+    PostHomePageResponse selectPostsByUserId(
+            @Param("userId") Long userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
 }

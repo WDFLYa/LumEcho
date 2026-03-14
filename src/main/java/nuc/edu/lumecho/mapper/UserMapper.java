@@ -41,4 +41,7 @@ public interface UserMapper {
 
     @Select("SELECT role FROM user WHERE id = #{id} AND deleted_at IS NULL")
     String getUserRoleById(@Param("id") Long id);
+
+    @Select("SELECT * FROM user WHERE id = #{id}")
+    User getUserById(@Param("id") Long id)
 }

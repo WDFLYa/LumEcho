@@ -13,6 +13,8 @@ public class PostDetailResponse {
     private String title;
     private String content;
     private String categoryName;
+    private Long likeCount;
+    private Long commentCount;
     private Long userId;
     private LocalDateTime createTime;
     private List<String> imageUrls;

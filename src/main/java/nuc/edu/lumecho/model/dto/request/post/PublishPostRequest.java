@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class PublishPostRequest {
@@ -16,5 +17,7 @@ public class PublishPostRequest {
 
     @NotNull(message = "请选择分类")
     private Long categoryId;
+
+    private List<String> imageUrls;
 
 }

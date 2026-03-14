@@ -51,4 +51,8 @@ public interface CommentMapper {
             "WHERE post_id = #{postId} " +
             "  AND (parent_id IS NULL) ")
     int countTopLevelComments(@Param("postId") Long postId);
+
+    @Select("SELECT COUNT(1) FROM comment " +
+            "WHERE post_id = #{postId} ")
+    int countComments(@Param("postId") Long postId);
 }

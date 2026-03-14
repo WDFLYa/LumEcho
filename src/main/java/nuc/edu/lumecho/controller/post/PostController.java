@@ -72,6 +72,27 @@ public class PostController {
         return Result.ok(postHomePageResponse);
     }
 
+    @GetMapping("/select/user")
+    public Result<PostHomePageResponse> getUserPosts(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "8") int limit) {
+
+        // 1. 参数安全校验 (模仿首页逻辑)
+        if (limit > 50) {
+            limit = 50;
+        }
+        if (offset < 0) {
+            offset = 0;
+        }
+
+
+        // 2. 调用 Service (按时间排序的逻辑在 Service/Mapper 内部已固定为 create_time DESC)
+        PostHomePageResponse response = postService.selectPostsByUserId(userId, offset, limit);
+
+        // 3. 返回统一结果
+        return Result.ok(response);
+    }
     @PostMapping("/{postId}/like")
     public Result<Void> toggleLike(@PathVariable Long postId) {
         postLikeService.toggleLike(postId);

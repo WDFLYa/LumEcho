@@ -16,6 +16,7 @@ import nuc.edu.lumecho.model.dto.request.post.UpdatePostRequest;
 import nuc.edu.lumecho.model.dto.response.post.PostDetailResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse;
 import nuc.edu.lumecho.model.dto.response.post.PostHomePageResponse;
+import nuc.edu.lumecho.model.dto.response.post.PostProfileResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.entity.Post;
 import nuc.edu.lumecho.model.entity.ResourceFile;
@@ -43,6 +44,8 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private CategoryMapper categoryMapper;
 
+
+
     @Override
     public void publishPost(PublishPostRequest publishPostRequest) {
         Post post = new Post();
@@ -59,6 +62,16 @@ public class PostServiceImpl implements PostService {
         post.setCreateTime(LocalDateTime.now());
         post.setUpdateTime(LocalDateTime.now());
         postMapper.insert(post);
+        ResourceFile resourceFile = new ResourceFile();
+        resourceFile.setBizType(ResourceTypeEnum.POST_COVER.getCode());
+        resourceFile.setBizId(post.getId());
+        resourceFile.setFileUrl(publishPostRequest.getImageUrls().get(0));
+        resourceFile.setFileName(post.getId() + "Cover");
+        resourceFile.setCreatedBy(WdfUserContext.getCurrentUserId());
+        resourceFile.setCreatedTime(LocalDateTime.now());
+        resourceFileMapper.insert(resourceFile);
+        resourceFileMapper.bindBizIdBatch(publishPostRequest.getImageUrls(),ResourceTypeEnum.POST_IMAGE.getCode(),post.getId());
+
     }
 
     @Override
@@ -84,6 +97,8 @@ public class PostServiceImpl implements PostService {
         postDetailResponse.setId(post.getId());
         postDetailResponse.setTitle(post.getTitle());
         postDetailResponse.setContent(post.getContent());
+        postDetailResponse.setLikeCount(post.getLikeCount());
+        postDetailResponse.setCommentCount(post.getCommentCount());
         postDetailResponse.setUserId(post.getUserId());
         postDetailResponse.setCreateTime(post.getCreateTime());
         List<ResourceFile> resourceFiles = resourceFileMapper.selectByBizIdAndTypes(post.getId(), List.of(
@@ -157,6 +172,31 @@ public class PostServiceImpl implements PostService {
 
         return postHomePageResponse;
     }
+
+    @Override
+    public PostHomePageResponse selectPostsByUserId(Long userId, int offset, int limit) {
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(userId,null,offset, limit);
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        long total = postMapper.countValidPosts(userId, null);
+
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
 
     private String formatTimeAgo(LocalDateTime postTime) {
         LocalDateTime now = LocalDateTime.now();

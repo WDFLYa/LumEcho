@@ -29,4 +29,8 @@ public interface ResourceFileMapper {
                        @Param("bizType") String bizType,
                        @Param("bizId") Long bizId);
 
+
+    int bindBizIdBatch(@Param("urls") List<String> urls,
+                       @Param("bizType") String bizType,
+                       @Param("bizId") Long bizId);
 }

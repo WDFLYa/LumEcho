@@ -140,4 +140,14 @@ public class UserServiceImpl implements UserService {
     public UserBaseInfoResponse selectUserBaseInfoById() {
         return userMapper.selectUserBaseInfoById(WdfUserContext.getCurrentUserId());
     }
+
+    @Override
+    public UserBaseInfoResponse selectUserBaseInfo(Long id) {
+        return userMapper.selectUserBaseInfoById(id);
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        return userMapper.getUserById(id);
+    }
 }

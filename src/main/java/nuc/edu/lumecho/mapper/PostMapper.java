@@ -1,6 +1,7 @@
 package nuc.edu.lumecho.mapper;
 
 import nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse;
+import nuc.edu.lumecho.model.dto.response.post.PostProfileResponse;
 import nuc.edu.lumecho.model.entity.Post;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -39,6 +40,10 @@ public interface PostMapper {
             @Param("limit") int limit
     );
 
+
+
+    // 查询总数
+    long countUserPosts(@Param("userId") Long userId);
     long countValidPosts(@Param("userId") Long userId, @Param("categoryId") Long categoryId);
 
 

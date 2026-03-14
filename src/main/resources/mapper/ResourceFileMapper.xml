@@ -14,4 +14,19 @@
     </foreach>
 </select>
 
+
+    <update id="bindBizIdBatch">
+        UPDATE resource_file
+        SET biz_id = #{bizId}
+        WHERE biz_type = #{bizType}
+        AND biz_id IS NULL
+        AND file_url IN
+        <foreach collection="urls"
+                 item="url"
+                 open="("
+                 separator=","
+                 close=")">
+            #{url}
+        </foreach>
+    </update>
 </mapper>
