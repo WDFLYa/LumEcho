@@ -2,17 +2,103 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="nuc.edu.lumecho.mapper.ChallengeMapper">
-    <select id="selectChallengeList" resultType="nuc.edu.lumecho.model.entity.Challenge">
-        SELECT
-        id, title, description, start_time, end_time, review_end_time,
-        status, max_participants, participant_count, created_at
-        FROM challenge
+
+    <!-- 实体映射 -->
+    <resultMap id="ChallengeResultMap" type="nuc.edu.lumecho.model.entity.Challenge">
+        <id property="id" column="id"/>
+
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="reviewEndTime" column="review_end_time"/>
+
+        <result property="status" column="status"/>
+
+        <result property="maxParticipants" column="max_participants"/>
+        <result property="participantCount" column="participant_count"/>
+
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+
+    <!-- 公共查询条件 -->
+    <sql id="whereClause">
         <where>
+
             <if test="status != null">
                 AND status = #{status}
             </if>
+
+            <if test="keyword != null and keyword != ''">
+                AND title LIKE CONCAT('%',#{keyword},'%')
+            </if>
+
         </where>
-        ORDER BY created_at DESC
+    </sql>
+
+
+    <!-- 挑战列表 -->
+    <select id="selectChallengeList" resultMap="ChallengeResultMap">
+
+        SELECT
+        id,
+        title,
+        description,
+        start_time,
+        end_time,
+        review_end_time,
+        status,
+        max_participants,
+        participant_count,
+        created_at,
+        updated_at
+        FROM challenge
+
+        <include refid="whereClause"/>
+
+        ORDER BY
+        end_time ASC,
+        created_at DESC
+
+        LIMIT #{offset}, #{limit}
+
     </select>
+
+
+    <!-- 挑战总数 -->
+    <select id="countChallengeList" resultType="int">
+
+        SELECT COUNT(*)
+        FROM challenge
+
+        <include refid="whereClause"/>
+
+    </select>
+
+
+    <!-- 根据ID查询挑战 -->
+    <select id="selectById" resultMap="ChallengeResultMap">
+
+        SELECT
+            id,
+            title,
+            description,
+            start_time,
+            end_time,
+            review_end_time,
+            status,
+            max_participants,
+            participant_count,
+            created_at,
+            updated_at
+        FROM challenge
+        WHERE id = #{id}
+
+    </select>
+
 </mapper>
