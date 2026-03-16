@@ -11,6 +11,7 @@ import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserDetailInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,5 +150,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(Long id) {
         return userMapper.getUserById(id);
+    }
+
+    @Override
+    public UserDetailInfoResponse GetUserDetailInfo() {
+        User user = userMapper.getUserById(WdfUserContext.getCurrentUserId());
+        UserDetailInfoResponse userDetailInfoResponse = new UserDetailInfoResponse();
+        userDetailInfoResponse.setUsername(user.getUsername());
+        userDetailInfoResponse.setBio(user.getBio());
+        userDetailInfoResponse.setEmail(user.getEmail());
+        userDetailInfoResponse.setAccount(user.getAccount());
+        userDetailInfoResponse.setPhone(user.getPhone());
+        userDetailInfoResponse.setStatus(user.getStatus());
+        userDetailInfoResponse.setRole(user.getRole());
+        userDetailInfoResponse.setCreateTime(user.getCreateTime());
+        userDetailInfoResponse.setUpdateTime(user.getUpdateTime());
+        return userDetailInfoResponse;
     }
 }

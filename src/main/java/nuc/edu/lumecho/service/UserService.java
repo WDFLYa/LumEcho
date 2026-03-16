@@ -3,6 +3,7 @@ package nuc.edu.lumecho.service;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserDetailInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +19,5 @@ public interface UserService {
 
     User getUserById(Long id);
 
+    UserDetailInfoResponse GetUserDetailInfo();
 }

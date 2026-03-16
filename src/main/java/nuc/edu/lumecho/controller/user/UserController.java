@@ -5,6 +5,7 @@ import nuc.edu.lumecho.common.Result;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
+import nuc.edu.lumecho.model.dto.response.user.UserDetailInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +69,10 @@ public class UserController {
     @GetMapping("/getuser/{id}")
     public Result<User> getUser(@PathVariable("id") Long id) {
         return Result.ok(userService.getUserById(id));
+    }
+
+    @GetMapping("/getuser")
+    public Result<UserDetailInfoResponse> getUserDetailInfo() {
+        return Result.ok(userService.GetUserDetailInfo());
     }
 }

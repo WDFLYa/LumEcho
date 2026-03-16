@@ -26,10 +26,30 @@ public interface PostService {
             @Param("limit") int limit
     );
 
+    PostHomePageResponse selectHomePostsByCategory(
+            @Param("categoryId") Long categoryId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    PostHomePageResponse selectHomePostsByCategoryAndHot(
+            @Param("categoryId") Long categoryId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
     PostHomePageResponse selectPostsByUserId(
             @Param("userId") Long userId,
             @Param("offset") int offset,
             @Param("limit") int limit
     );
 
+
+    public PostHomePageResponse selectPostsByUserLike(Long userId, int offset, int limit);
+
+
+
+    PostHomePageResponse searchPostsByHot(String keyword, Long categoryId, int offset, int limit);
+
+    PostHomePageResponse searchPostsByTime(String keyword, Long categoryId, int offset, int limit);
 }

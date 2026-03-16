@@ -51,25 +51,46 @@ public class PostController {
 
     @GetMapping("/select/all")
     public Result<PostHomePageResponse> getHomePosts(
+            @RequestParam(required = false) String keyword,
             @RequestParam(defaultValue = "time") String sort,
+            @RequestParam(required = false) Long categoryId, // 新增：允许传分类ID
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "8") int limit) {
 
-        if (!"time".equals(sort) && !"hot".equals(sort)) {
-            sort = "time";
-        }
-
+        // 参数校验
+        if (keyword != null) keyword = keyword.trim();
+        if (!"time".equals(sort) && !"hot".equals(sort)) sort = "time";
         if (limit > 50) limit = 50;
         if (offset < 0) offset = 0;
 
-        PostHomePageResponse postHomePageResponse;
-        if ("hot".equals(sort)) {
-            postHomePageResponse = postService.selectHomePostsByHot(offset, limit);
-        } else {
-            postHomePageResponse = postService.selectHomePosts(offset, limit);
+        PostHomePageResponse response;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            // 1. 走搜索逻辑 (支持分类 + 排序)
+            if ("hot".equals(sort)) {
+                response = postService.searchPostsByHot(keyword, categoryId, offset, limit);
+            } else {
+                response = postService.searchPostsByTime(keyword, categoryId, offset, limit);
+            }
+        }
+        else if (categoryId != null) {
+            // 2. 无搜索词，有分类 (支持排序)
+            if ("hot".equals(sort)) {
+                response = postService.selectHomePostsByCategoryAndHot(categoryId, offset, limit);
+            } else {
+                response = postService.selectHomePostsByCategory(categoryId, offset, limit);
+            }
+        }
+        else {
+            // 3. 无搜索词，无分类 (全局)
+            if ("hot".equals(sort)) {
+                response = postService.selectHomePostsByHot(offset, limit);
+            } else {
+                response = postService.selectHomePosts(offset, limit);
+            }
         }
 
-        return Result.ok(postHomePageResponse);
+        return Result.ok(response);
     }
 
     @GetMapping("/select/user")
@@ -93,6 +114,17 @@ public class PostController {
         // 3. 返回统一结果
         return Result.ok(response);
     }
+
+    @GetMapping("/like/list")
+    public Result<PostHomePageResponse> getUserLikedPosts(
+            @RequestParam Long userId,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "8") int limit) {
+
+        PostHomePageResponse response = postService.selectPostsByUserLike(userId, offset, limit);
+        return Result.ok(response);
+    }
+
     @PostMapping("/{postId}/like")
     public Result<Void> toggleLike(@PathVariable Long postId) {
         postLikeService.toggleLike(postId);

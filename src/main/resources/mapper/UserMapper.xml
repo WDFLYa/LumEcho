@@ -19,9 +19,13 @@
             <if test="deletedAt != null or deletedAt == null">
                 deleted_at = #{deletedAt},
             </if>
+
+            update_time = NOW(),
+
         </set>
         WHERE id = #{id}
     </update>
+
 
 
     <select id="selectUserBaseInfoByIds" resultType="nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse">

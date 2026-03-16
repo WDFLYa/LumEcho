@@ -52,6 +52,7 @@
         AND deleted_at IS NULL
     </update>
 
+    <!-- 按时间排序 (最新) - 更新版 -->
     <select id="selectHomePosts" resultType="nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse">
         SELECT
         p.id,
@@ -68,13 +69,20 @@
         INNER JOIN user u ON p.user_id = u.id
         INNER JOIN categories c ON p.category_id = c.id
         LEFT JOIN resource_file avatar_res
-        ON avatar_res.biz_type = 'AVATAR'
-        AND avatar_res.biz_id = p.user_id
+        ON avatar_res.biz_type = 'AVATAR' AND avatar_res.biz_id = p.user_id
         LEFT JOIN resource_file cover_res
-        ON cover_res.biz_type = 'POST_COVER'
-        AND cover_res.biz_id = p.id
+        ON cover_res.biz_type = 'POST_COVER' AND cover_res.biz_id = p.id
         WHERE
         p.deleted_at IS NULL
+        AND p.post_status = 1   <!-- ✨ 补充 -->
+        AND c.status = 1        <!-- ✨ 补充 -->
+
+        <!-- ✨ 新增：关键词搜索 -->
+        <if test="keyword != null and keyword != ''">
+            AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+            OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
         <if test="userId != null">
             AND p.user_id = #{userId}
         </if>
@@ -85,7 +93,7 @@
         LIMIT #{limit} OFFSET #{offset}
     </select>
 
-    <!-- 按热度排序 -->
+    <!-- 按热度排序 (热门) - 更新版 -->
     <select id="selectHomePostsByHot" resultType="nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse">
         SELECT
         p.id,
@@ -98,8 +106,6 @@
         avatar_res.file_url AS avatar,
         cover_res.file_url AS cover,
         c.name AS category,
-
-        <!-- 热度分计算（可调参数） -->
         (
         p.view_count * 0.1 +
         p.like_count * 1.0 +
@@ -108,7 +114,6 @@
         (UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(p.create_time)) / 3600 + 2,
         1.5
         ) AS hot_score
-
         FROM posts p
         INNER JOIN user u ON p.user_id = u.id
         INNER JOIN categories c ON p.category_id = c.id
@@ -118,6 +123,15 @@
         ON cover_res.biz_type = 'POST_COVER' AND cover_res.biz_id = p.id
         WHERE
         p.deleted_at IS NULL
+        AND p.post_status = 1   <!-- ✨ 补充 -->
+        AND c.status = 1        <!-- ✨ 补充 -->
+
+        <!-- ✨ 新增：关键词搜索 -->
+        <if test="keyword != null and keyword != ''">
+            AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+            OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
         <if test="userId != null">
             AND p.user_id = #{userId}
         </if>
@@ -169,13 +183,69 @@
         INNER JOIN categories c ON p.category_id = c.id
         WHERE
         p.deleted_at IS NULL
-        AND p.post_status = 1
-        AND c.status = 1
+        AND p.post_status = 1   <!-- ✨ 补充：确保帖子已发布 -->
+        AND c.status = 1        <!-- ✨ 补充：确保分类有效 -->
+
+        <!-- ✨ 新增：关键词模糊搜索 (标题 或 内容) -->
+        <if test="keyword != null and keyword != ''">
+            AND (p.title LIKE CONCAT('%', #{keyword}, '%')
+            OR p.content LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+
+        <!-- 原有：用户筛选 -->
         <if test="userId != null">
             AND p.user_id = #{userId}
         </if>
+
+        <!-- 原有：分类筛选 -->
         <if test="categoryId != null">
             AND p.category_id = #{categoryId}
         </if>
     </select>
+    <!-- 查询用户点赞的帖子列表 -->
+    <!-- PostMapper.xml -->
+    <!-- 查询用户点赞的帖子列表 -->
+    <select id="selectPostsByUserLike"
+            resultType="nuc.edu.lumecho.model.dto.response.post.PostHomeItemResponse">
+        SELECT
+            p.id,
+            p.title,
+            p.like_count AS likes,
+            p.comment_count AS comments,
+            p.view_count AS views,
+            p.create_time AS createTime,
+            u.username,
+            avatar_res.file_url AS avatar,
+            cover_res.file_url AS cover,
+            c.name AS category,
+            c.id AS categoryId
+        FROM post_like pl
+                 INNER JOIN posts p ON pl.post_id = p.id
+                 INNER JOIN user u ON p.user_id = u.id
+                 INNER JOIN categories c ON p.category_id = c.id
+                 LEFT JOIN resource_file avatar_res
+                           ON avatar_res.biz_type = 'AVATAR' AND avatar_res.biz_id = p.user_id
+                 LEFT JOIN resource_file cover_res
+                           ON cover_res.biz_type = 'POST_COVER' AND cover_res.biz_id = p.id
+        WHERE
+            pl.user_id = #{userId}
+          AND p.deleted_at IS NULL
+          AND p.post_status = 1
+          AND c.status = 1
+        ORDER BY pl.created_at DESC
+            LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 统计用户点赞的帖子总数 -->
+    <select id="countLikedPosts" resultType="long">
+        SELECT COUNT(*)
+        FROM post_like pl
+                 INNER JOIN posts p ON pl.post_id = p.id
+        WHERE
+            pl.user_id = #{userId}
+          AND p.deleted_at IS NULL
+          AND p.post_status = 1
+    </select>
+
+
 </mapper>

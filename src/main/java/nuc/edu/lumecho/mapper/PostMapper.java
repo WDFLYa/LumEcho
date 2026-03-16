@@ -27,24 +27,41 @@ public interface PostMapper {
 
 
     List<PostHomeItemResponse> selectHomePosts(
-            @Param("userId") Long userId,
+            @Param("keyword") String keyword,
             @Param("categoryId") Long categoryId,
+            @Param("userId") Long userId,
             @Param("offset") int offset,
             @Param("limit") int limit
     );
 
     List<PostHomeItemResponse> selectHomePostsByHot(
-            @Param("userId") Long userId,
+            @Param("keyword") String keyword,
             @Param("categoryId") Long categoryId,
+            @Param("userId") Long userId,
             @Param("offset") int offset,
             @Param("limit") int limit
     );
+
+    // PostMapper.java
+    /**
+     * 查询用户点赞的帖子列表（按点赞时间排序）
+     */
+    List<PostHomeItemResponse> selectPostsByUserLike(
+            @Param("userId") Long userId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    /**
+     * 统计用户点赞的帖子总数
+     */
+    Long countLikedPosts(@Param("userId") Long userId);
 
 
 
     // 查询总数
     long countUserPosts(@Param("userId") Long userId);
-    long countValidPosts(@Param("userId") Long userId, @Param("categoryId") Long categoryId);
+    long countValidPosts(@Param("keyword") String keyword,@Param("userId") Long userId, @Param("categoryId") Long categoryId);
 
 
     @Update("UPDATE posts SET comment_count = comment_count + 1 WHERE id = #{postId}")
@@ -55,5 +72,6 @@ public interface PostMapper {
 
     @Update("UPDATE posts SET like_count = like_count - 1 WHERE id = #{postId} AND like_count > 0")
     void decrementLikeCount(@Param("postId") Long postId);
+
 
 }

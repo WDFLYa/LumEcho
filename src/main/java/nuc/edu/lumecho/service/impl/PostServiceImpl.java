@@ -127,7 +127,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostHomePageResponse selectHomePosts(int offset, int limit) {
-        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(null,null,offset, limit);
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(null,null,null,offset, limit);
         for (PostHomeItemResponse item : postHomeItemResponses) {
             LocalDateTime createdTime = item.getCreateTime();
             if (createdTime != null) {
@@ -137,7 +137,7 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        long total = postMapper.countValidPosts(null, null);
+        long total = postMapper.countValidPosts(null,null, null);
 
         boolean hasMore = (offset + postHomeItemResponses.size()) < total;
 
@@ -151,7 +151,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostHomePageResponse selectHomePostsByHot(int offset, int limit) {
-        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePostsByHot(null,null,offset, limit);
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePostsByHot(null,null,null,offset, limit);
         for (PostHomeItemResponse item : postHomeItemResponses) {
             LocalDateTime createdTime = item.getCreateTime();
             if (createdTime != null) {
@@ -161,7 +161,55 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        long total = postMapper.countValidPosts(null, null);
+        long total = postMapper.countValidPosts(null,null, null);
+
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
+    @Override
+    public PostHomePageResponse selectHomePostsByCategory(Long categoryId, int offset, int limit) {
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(null,categoryId,null,offset, limit);
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        long total = postMapper.countValidPosts(null,null, categoryId);
+
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
+    @Override
+    public PostHomePageResponse selectHomePostsByCategoryAndHot(Long categoryId, int offset, int limit) {
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePostsByHot(null,categoryId,null,offset, limit);
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        long total = postMapper.countValidPosts(null,null, categoryId);
 
         boolean hasMore = (offset + postHomeItemResponses.size()) < total;
 
@@ -175,7 +223,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostHomePageResponse selectPostsByUserId(Long userId, int offset, int limit) {
-        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(userId,null,offset, limit);
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(null,null,userId,offset, limit);
         for (PostHomeItemResponse item : postHomeItemResponses) {
             LocalDateTime createdTime = item.getCreateTime();
             if (createdTime != null) {
@@ -185,7 +233,87 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        long total = postMapper.countValidPosts(userId, null);
+        long total = postMapper.countValidPosts(null,userId, null);
+
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
+    // PostServiceImpl.java
+    @Override
+    public PostHomePageResponse selectPostsByUserLike(Long userId, int offset, int limit) {
+        // 1. 查询用户点赞的帖子列表（按点赞时间排序）
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectPostsByUserLike(userId, offset, limit);
+
+        // 2. 处理 timeAgo 字段
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        // 3. 查询总数
+        long total = postMapper.countLikedPosts(userId);
+
+        // 4. 判断是否有更多
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        // 5. 组装响应
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
+
+    @Override
+    public PostHomePageResponse searchPostsByHot(String keyword, Long categoryId, int offset, int limit) {
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePostsByHot(keyword,categoryId,null,offset, limit);
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        long total = postMapper.countValidPosts(keyword,null, categoryId);
+
+        boolean hasMore = (offset + postHomeItemResponses.size()) < total;
+
+        PostHomePageResponse postHomePageResponse = new PostHomePageResponse();
+        postHomePageResponse.setData(postHomeItemResponses);
+        postHomePageResponse.setHasMore(hasMore);
+        postHomePageResponse.setTotal(total);
+
+        return postHomePageResponse;
+    }
+
+    @Override
+    public PostHomePageResponse searchPostsByTime(String keyword, Long categoryId, int offset, int limit) {
+        List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(keyword,categoryId,null,offset, limit);
+        for (PostHomeItemResponse item : postHomeItemResponses) {
+            LocalDateTime createdTime = item.getCreateTime();
+            if (createdTime != null) {
+                item.setTimeAgo(formatTimeAgo(createdTime));
+            } else {
+                item.setTimeAgo("未知时间");
+            }
+        }
+
+        long total = postMapper.countValidPosts(keyword,null, categoryId);
 
         boolean hasMore = (offset + postHomeItemResponses.size()) < total;
 
