@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="nuc.edu.lumecho.mapper.PhotographerApplicationMapper">
+    <update id="updateStatus" parameterType="PhotographerApplication">
+        UPDATE photographer_application
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="rejectReason != null">
+                reject_reason = #{rejectReason},
+            </if>
+            <if test="reviewTime != null">
+                review_time = #{reviewTime},
+            </if>
+            <if test="reviewerId != null">
+                reviewer_id = #{reviewerId},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>

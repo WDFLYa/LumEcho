@@ -21,14 +21,26 @@ public class PhotographerApplicationServiceImpl implements PhotographerApplicati
 
     @Override
     public void insertPhotographerApply(PhotographerApplyRequest request) {
-        if (photographerApplicationMapper.countByUserId(WdfUserContext.getCurrentUserId()) > 0) {
-            throw new BusinessException(ResultCodeEnum.PHOTOGRAPHER_APPLY_EXISTS);
+
+        PhotographerApplication application = new PhotographerApplication();
+        application.setUserId(WdfUserContext.getCurrentUserId());
+        application.setDescription(request.getDescription());
+        application.setApplyTime(LocalDateTime.now());
+
+        int count = photographerApplicationMapper.countByUserId(WdfUserContext.getCurrentUserId());
+
+        if (count > 0) {
+            // 已申请过 → 更新
+            photographerApplicationMapper.updateApply(application);
+        } else {
+            // 第一次申请 → 插入
+            photographerApplicationMapper.insert(application);
         }
-        PhotographerApplication photographerApplication = new PhotographerApplication();
-        photographerApplication.setUserId(WdfUserContext.getCurrentUserId());
-        photographerApplication.setDescription(request.getDescription());
-        photographerApplication.setStatus(PhotographerApplyStatusEnum.PENDING.getCode());
-        photographerApplication.setApplyTime(LocalDateTime.now());
-        photographerApplicationMapper.insert(photographerApplication);
     }
+
+    @Override
+    public PhotographerApplication getUserApply() {
+        return photographerApplicationMapper.selectByUserId(WdfUserContext.getCurrentUserId());
+    }
+
 }
