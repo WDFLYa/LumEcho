@@ -42,7 +42,12 @@ public enum ResultCodeEnum {
 
     PHOTOGRAPHER_APPLY_EXISTS(701, "您已提交过摄影师认证申请，请勿重复提交"),
     NOT_PHOTOGRAPHER(702, "您不是摄影师"),
-    CHALLENGE_PUBLISH_FORBIDDEN(703, "权限不足：仅管理员或摄影师可发布挑战赛");
+    CHALLENGE_PUBLISH_FORBIDDEN(703, "权限不足：仅管理员或摄影师可发布挑战赛"),
+    FOLLOW_SELF_FORBIDDEN(801, "不能关注自己"),
+    FOLLOW_ALREADY_EXISTS(802, "您已关注该用户，无需重复关注"),
+    FOLLOW_NOT_EXISTS(803, "您尚未关注该用户，无法取消"),
+    FOLLOW_TARGET_NOT_FOUND(804, "关注的用户不存在"),
+    FOLLOW_COUNT_LIMIT_EXCEEDED(805, "关注人数已达上限，请稍后再试");
 
     private final Integer code;
 
