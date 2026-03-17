@@ -75,4 +75,10 @@ public class UserController {
     public Result<UserDetailInfoResponse> getUserDetailInfo() {
         return Result.ok(userService.GetUserDetailInfo());
     }
+
+    @PostMapping("/updateuseravatar")
+    public Result updateUserAvatar(@RequestBody AvatarUpdateRequest avatarUpdateRequest) {
+        userService.updateUserAvatar(avatarUpdateRequest.getAvatarUrl());
+        return Result.ok();
+    }
 }

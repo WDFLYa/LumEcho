@@ -33,4 +33,11 @@ public interface ResourceFileMapper {
     int bindBizIdBatch(@Param("urls") List<String> urls,
                        @Param("bizType") String bizType,
                        @Param("bizId") Long bizId);
+
+    @Update("UPDATE resource_file SET file_url = #{fileUrl} WHERE biz_id = #{bizId} AND biz_type = #{bizType}")
+    int updateUserAvatar(
+            @Param("fileUrl") String fileUrl,
+            @Param("bizType") String bizType,
+            @Param("bizId") Long bizId
+    );
 }

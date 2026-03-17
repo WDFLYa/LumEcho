@@ -1,5 +1,6 @@
 package nuc.edu.lumecho.service.impl;
 
+import nuc.edu.lumecho.common.Enum.ResourceTypeEnum;
 import nuc.edu.lumecho.common.Enum.ResultCodeEnum;
 import nuc.edu.lumecho.common.RedisKeyConstants;
 import nuc.edu.lumecho.common.WdfUserContext;
@@ -7,6 +8,7 @@ import nuc.edu.lumecho.common.exception.BusinessException;
 import nuc.edu.lumecho.common.util.WdfMd5Util;
 import nuc.edu.lumecho.common.util.WdfStringUtil;
 import nuc.edu.lumecho.common.util.WdfTokenUtil;
+import nuc.edu.lumecho.mapper.ResourceFileMapper;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
@@ -26,6 +28,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ResourceFileMapper resourceFileMapper;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -166,5 +171,10 @@ public class UserServiceImpl implements UserService {
         userDetailInfoResponse.setCreateTime(user.getCreateTime());
         userDetailInfoResponse.setUpdateTime(user.getUpdateTime());
         return userDetailInfoResponse;
+    }
+
+    @Override
+    public void updateUserAvatar(String avatarUrl) {
+        resourceFileMapper.updateUserAvatar(avatarUrl, ResourceTypeEnum.AVATAR.getCode(),WdfUserContext.getCurrentUserId());
     }
 }

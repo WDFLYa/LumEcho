@@ -20,4 +20,6 @@ public interface UserService {
     User getUserById(Long id);
 
     UserDetailInfoResponse GetUserDetailInfo();
+
+    void updateUserAvatar(String avatarUrl);
 }

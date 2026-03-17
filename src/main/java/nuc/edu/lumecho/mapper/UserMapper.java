@@ -2,10 +2,8 @@ package nuc.edu.lumecho.mapper;
 
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
-import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -44,4 +42,5 @@ public interface UserMapper {
 
     @Select("SELECT * FROM user WHERE id = #{id}")
     User getUserById(@Param("id") Long id);
+
 }
