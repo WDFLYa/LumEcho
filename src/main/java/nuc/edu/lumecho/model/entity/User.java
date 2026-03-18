@@ -15,6 +15,8 @@ public class User {
     private String bio;         //简介
     private Integer status;     //状态
     private String role;        //角色
+    private Long fansCount;
+    private Long followCount;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
     private LocalDateTime deletedAt;

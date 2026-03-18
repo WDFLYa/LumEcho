@@ -21,7 +21,6 @@ public enum ResultCodeEnum {
     ADMIN_CAPTCHA_CODE_EXPIRED(303, "验证码已过期"),
     ADMIN_CAPTCHA_CODE_NOT_FOUND(304, "未输入验证码"),
 
-
     ADMIN_LOGIN_AUTH(305, "未登陆"),
     ADMIN_ACCOUNT_NOT_EXIST_ERROR(306, "账号不存在"),
     ADMIN_PASSWORD_ERROR(307, "密码错误"),
@@ -36,21 +35,18 @@ public enum ResultCodeEnum {
     APP_LOGIN_CODE_ERROR(506, "验证码错误"),
     APP_ACCOUNT_DISABLED_ERROR(507, "该用户已被禁用"),
 
-
     TOKEN_EXPIRED(601, "token过期"),
     TOKEN_INVALID(602, "token非法"),
 
     PHOTOGRAPHER_APPLY_EXISTS(701, "您已提交过摄影师认证申请，请勿重复提交"),
     NOT_PHOTOGRAPHER(702, "您不是摄影师"),
     CHALLENGE_PUBLISH_FORBIDDEN(703, "权限不足：仅管理员或摄影师可发布挑战赛"),
+
     FOLLOW_SELF_FORBIDDEN(801, "不能关注自己"),
     FOLLOW_ALREADY_EXISTS(802, "您已关注该用户，无需重复关注"),
-    FOLLOW_NOT_EXISTS(803, "您尚未关注该用户，无法取消"),
-    FOLLOW_TARGET_NOT_FOUND(804, "关注的用户不存在"),
-    FOLLOW_COUNT_LIMIT_EXCEEDED(805, "关注人数已达上限，请稍后再试");
+    FOLLOW_NOT_EXISTS(803, "您尚未关注该用户，无法取消");
 
     private final Integer code;
-
     private final String message;
 
     ResultCodeEnum(Integer code, String message) {

@@ -9,19 +9,24 @@ import nuc.edu.lumecho.common.util.WdfMd5Util;
 import nuc.edu.lumecho.common.util.WdfStringUtil;
 import nuc.edu.lumecho.common.util.WdfTokenUtil;
 import nuc.edu.lumecho.mapper.ResourceFileMapper;
+import nuc.edu.lumecho.mapper.UserFollowMapper;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
+import nuc.edu.lumecho.model.dto.response.user.FollowListResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserDetailInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
+import nuc.edu.lumecho.model.entity.UserFollow;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ResourceFileMapper resourceFileMapper;
+
+    @Autowired
+    private UserFollowMapper userFollowMapper;
 
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
@@ -53,6 +61,7 @@ public class UserServiceImpl implements UserService {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
         loginResponse.setUserId(userId);
+        loginResponse.setRole(userMapper.getUserRoleById(userId));
 
         String key = RedisKeyConstants.USER_TOKEN_KEY + token;
         stringRedisTemplate.opsForValue().set(key, String.valueOf(userId),30, TimeUnit.MINUTES);
@@ -83,6 +92,7 @@ public class UserServiceImpl implements UserService {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);
         loginResponse.setUserId(userId);
+        loginResponse.setRole(userMapper.getUserRoleById(userId));
 
         WdfUserContext.setCurrentUserId(userId);
         System.out.printf("登录成功");
@@ -177,4 +187,68 @@ public class UserServiceImpl implements UserService {
     public void updateUserAvatar(String avatarUrl) {
         resourceFileMapper.updateUserAvatar(avatarUrl, ResourceTypeEnum.AVATAR.getCode(),WdfUserContext.getCurrentUserId());
     }
+
+    @Override
+    public List<FollowListResponse> selectFollowList(Long userId) {
+        List<UserFollow> userFollows = userFollowMapper.selectFollowList(userId);
+        List<Long> followingIds = userFollows.stream()
+                .map(UserFollow::getFollowingId).toList();
+
+        if (followingIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<UserBaseInfoResponse> userBaseInfos = userMapper.selectUserBaseInfoByIds(followingIds);
+
+        Long currentUserId = WdfUserContext.getCurrentUserId();
+
+        return userBaseInfos.stream()
+                .map(userBaseInfo -> {
+                    FollowListResponse response = new FollowListResponse();
+                    response.setUserId(userBaseInfo.getId());
+                    response.setUserName(userBaseInfo.getUsername());
+                    response.setBio(userBaseInfo.getBio());
+                    response.setAvatar(userBaseInfo.getAvatar());
+
+                    boolean isFollowing = userFollowMapper.checkFollowStatus(currentUserId, userBaseInfo.getId()) > 0;
+                    response.setStatus(isFollowing);
+
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public List<FollowListResponse> selectFollowerList(Long userId) {
+        List<UserFollow> userFollows = userFollowMapper.selectFansList(userId);
+        List<Long> followerIds = userFollows.stream()
+                .map(UserFollow::getFollowerId).toList();
+
+        if (followerIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<UserBaseInfoResponse> userBaseInfos = userMapper.selectUserBaseInfoByIds(followerIds);
+
+        Long currentUserId = WdfUserContext.getCurrentUserId();
+
+        return userBaseInfos.stream()
+                .map(userBaseInfo -> {
+                    FollowListResponse response = new FollowListResponse();
+                    response.setUserId(userBaseInfo.getId());
+                    response.setUserName(userBaseInfo.getUsername());
+                    response.setBio(userBaseInfo.getBio());
+                    response.setAvatar(userBaseInfo.getAvatar());
+
+                    boolean isFollowing = userFollowMapper.checkFollowStatus(currentUserId, userBaseInfo.getId()) > 0;
+                    response.setStatus(isFollowing);
+
+                    return response;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 }

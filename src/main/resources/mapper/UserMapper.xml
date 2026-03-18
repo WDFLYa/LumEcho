@@ -32,6 +32,7 @@
         SELECT
         u.id,
         u.username,
+        u.bio,
         rf.file_url AS avatar
         FROM user u
         LEFT JOIN resource_file rf
@@ -44,11 +45,15 @@
         AND u.deleted_at IS NULL
     </select>
 
+
+
     <select id="selectUserBaseInfoById" resultType="nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse">
         SELECT
         u.id,
         u.username,
         u.bio,
+        u.fans_count,
+        u.follow_count,
         rf.file_url AS avatar
         FROM user u
         LEFT JOIN resource_file rf
