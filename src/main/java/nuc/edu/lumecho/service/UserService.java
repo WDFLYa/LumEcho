@@ -28,4 +28,7 @@ public interface UserService {
 
     List<FollowListResponse> selectFollowList(Long userId);
     List<FollowListResponse> selectFollowerList(Long userId);
+
+    List<UserDetailInfoResponse> getAllUsersForAdmin();
+    void updateUserStatusByAccount(String account, Integer status);
 }

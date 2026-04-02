@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user")
@@ -74,6 +76,22 @@ public class UserController {
     @GetMapping("/getuser")
     public Result<UserDetailInfoResponse> getUserDetailInfo() {
         return Result.ok(userService.GetUserDetailInfo());
+    }
+
+    @GetMapping("/list")
+    public Result<List<UserDetailInfoResponse>> getUserList() {
+
+        List<UserDetailInfoResponse> list = userService.getAllUsersForAdmin();
+        return Result.ok(list);
+    }
+
+    @PutMapping("/status/{account}")
+    public Result<Void> updateUserStatus(@PathVariable String account, @RequestBody Map<String, Integer> body) {
+        Integer status = body.get("status");
+
+        userService.updateUserStatusByAccount(account, status);
+
+        return Result.ok();
     }
 
     @PostMapping("/updateuseravatar")

@@ -250,5 +250,37 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<UserDetailInfoResponse> getAllUsersForAdmin() {
+        // 1. 从 Mapper 获取所有 User 实体
+        List<User> users = userMapper.selectAllUsersForAdmin();
+
+        // 2. 转换为 DTO (UserDetailInfoResponse)
+        return users.stream().map(user -> {
+            UserDetailInfoResponse resp = new UserDetailInfoResponse();
+            resp.setAccount(user.getAccount());
+            resp.setUsername(user.getUsername());
+            resp.setEmail(user.getEmail());
+            resp.setPhone(user.getPhone());
+            resp.setStatus(user.getStatus());
+            resp.setRole(user.getRole());
+            resp.setCreateTime(user.getCreateTime());
+            resp.setUpdateTime(user.getUpdateTime());
+            // 如果有 bio 或 avatar，也记得 set
+            // resp.setBio(user.getBio());
+            // resp.setAvatar(user.getAvatar());
+            return resp;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateUserStatusByAccount(String account, Integer status) {
+        // 调用 Mapper 更新
+        int rows = userMapper.updateStatusByAccount(account, status);
+        if (rows == 0) {
+            throw new RuntimeException("用户不存在或更新失败");
+        }
+    }
+
 
 }
