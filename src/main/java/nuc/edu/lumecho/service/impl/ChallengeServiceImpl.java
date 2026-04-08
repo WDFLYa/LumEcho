@@ -1,16 +1,19 @@
 package nuc.edu.lumecho.service.impl;
 
 import nuc.edu.lumecho.common.Enum.ChallengeStatus;
+import nuc.edu.lumecho.common.Enum.ResourceTypeEnum;
 import nuc.edu.lumecho.common.Enum.ResultCodeEnum;
 import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.common.exception.BusinessException;
 import nuc.edu.lumecho.mapper.ChallengeMapper;
+import nuc.edu.lumecho.mapper.ResourceFileMapper;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.challenge.ChallengeCreateRequest;
 import nuc.edu.lumecho.model.dto.response.challenge.ChallengeListItemResponse;
 import nuc.edu.lumecho.model.dto.response.challenge.ChallengeListResponse;
 import nuc.edu.lumecho.model.entity.Challenge;
 import nuc.edu.lumecho.service.ChallengeService;
+import org.checkerframework.checker.units.qual.Acceleration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,8 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private ResourceFileMapper resourceFileMapper;
     @Override
     public void createChallenge(ChallengeCreateRequest challengeCreateRequest) {
 
@@ -46,9 +51,12 @@ public class ChallengeServiceImpl implements ChallengeService {
         challenge.setMaxParticipants(challengeCreateRequest.getMaxParticipants());
         challenge.setParticipantCount(0);
         challenge.setStatus(ChallengeStatus.NOT_STARTED.getCode());
+        challenge.setRules(challengeCreateRequest.getRules());
+        challenge.setPrizes(challengeCreateRequest.getPrizes());
         challenge.setCreatedAt(LocalDateTime.now());
         challenge.setUpdatedAt(LocalDateTime.now());
         challengeMapper.createChallenge(challenge);
+        resourceFileMapper.bindBizIdByUrl(challengeCreateRequest.getCoverUrl(), ResourceTypeEnum.CHALLENGE_COVER.getCode(), challenge.getId());
     }
 
     @Override

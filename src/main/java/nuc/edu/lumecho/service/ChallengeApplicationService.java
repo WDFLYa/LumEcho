@@ -33,4 +33,10 @@ public interface ChallengeApplicationService {
      * 获取所有报名记录
      */
     List<ChallengeApplication> listAll();
+
+    Integer getUserApplyStatus(Long challengeId);
+
+    ChallengeApplication getByChallengeAndUser(Long challengeId, Long userId);
+
+    boolean checkHasSubmittedWork(Long challengeId);
 }

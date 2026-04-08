@@ -92,6 +92,8 @@
             end_time,
             review_end_time,
             status,
+            rules,
+            prizes,
             max_participants,
             participant_count,
             created_at,

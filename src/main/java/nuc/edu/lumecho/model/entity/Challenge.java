@@ -15,6 +15,8 @@ public class Challenge {
     private Integer status;
     private Integer maxParticipants;
     private Integer participantCount;
+    private String rules;
+    private String prizes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

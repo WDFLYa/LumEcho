@@ -2,10 +2,8 @@ package nuc.edu.lumecho.mapper;
 
 import nuc.edu.lumecho.model.dto.response.challenge.ChallengeSubmissionItemResponse;
 import nuc.edu.lumecho.model.entity.ChallengeSubmission;
-import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +19,23 @@ public interface ChallengeSubmissionMapper {
             @Param("challengeId") Long challengeId
     );
 
+    @Select("SELECT COUNT(*) > 0 " +
+            "FROM challenge_submission s " +
+            "JOIN challenge_application a ON s.application_id = a.id " +
+            "WHERE a.user_id = #{userId} " +
+            "AND a.challenge_id = #{challengeId}")
+    boolean existsByUserIdAndChallengeId(
+            @Param("userId") Long userId,
+            @Param("challengeId") Long challengeId
+    );
+
+    @Select("SELECT s.* FROM challenge_submission s " +
+            "JOIN challenge_application a ON s.application_id = a.id " +
+            "WHERE a.challenge_id = #{challengeId}")
+    List<ChallengeSubmission> selectByChallengeId(@Param("challengeId") Long challengeId);
+
+    @Update("UPDATE challenge_submission " +
+            "SET final_score = #{finalScore}, update_time = NOW() " +
+            "WHERE id = #{id}")
+    void updateFinalScore(ChallengeSubmission submission);
 }

@@ -9,4 +9,6 @@ public interface ChallengeSubmissionService {
     void createChallengeSubmission(ChallengeSubmissionRequest challengeSubmissionRequest);
 
     List<ChallengeSubmissionItemResponse> getSubmissionList(Long challengeId);
+
+
 }
