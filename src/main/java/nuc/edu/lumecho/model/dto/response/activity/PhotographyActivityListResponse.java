@@ -1,12 +1,10 @@
-package nuc.edu.lumecho.model.entity;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+package nuc.edu.lumecho.model.dto.response.activity;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class PhotographyActivity {
+public class PhotographyActivityListResponse {
     private Long id;
     private String title;
     private String description;
@@ -18,6 +16,5 @@ public class PhotographyActivity {
     private Long photographerId;
     private Integer status;
     private Integer requireAudit;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
+    private String coverUrl;
 }

@@ -14,4 +14,8 @@ public interface ActivityApplicationService {
     void rejectApplication(Long applicationId);
 
     List<ActivityApplication> listAll();
+
+    ActivityApplication getMyApplicationStatus(Long activityId);
+
+    List<ActivityApplication> listByActivityId(Long activityId);
 }

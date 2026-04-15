@@ -44,4 +44,15 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
     public List<ActivityApplication> listAll() {
         return activityApplicationMapper.listAll();
     }
+
+    @Override
+    public ActivityApplication getMyApplicationStatus(Long activityId) {
+        Long userId = WdfUserContext.getCurrentUserId();
+        return activityApplicationMapper.getByActivityAndUser(activityId, userId);
+    }
+
+    @Override
+    public List<ActivityApplication> listByActivityId(Long activityId) {
+        return activityApplicationMapper.listByActivityId(activityId);
+    }
 }

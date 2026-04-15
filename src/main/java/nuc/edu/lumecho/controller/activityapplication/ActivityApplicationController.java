@@ -44,4 +44,13 @@ public class ActivityApplicationController {
         return Result.ok(activityApplicationService.listAll());
     }
 
+    @GetMapping("/my-status/{activityId}")
+    public Result<ActivityApplication> getMyStatus(@PathVariable Long activityId) {
+        return Result.ok(activityApplicationService.getMyApplicationStatus(activityId));
+    }
+
+    @GetMapping("/list/{activityId}")
+    public Result<List<ActivityApplication>> listByActivityId(@PathVariable Long activityId) {
+        return Result.ok(activityApplicationService.listByActivityId(activityId));
+    }
 }
