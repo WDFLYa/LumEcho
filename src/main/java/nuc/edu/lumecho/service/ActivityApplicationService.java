@@ -7,6 +7,8 @@ import java.util.List;
 public interface ActivityApplicationService {
     void createActivityApplication(Long activityId);
 
+    void createActivityApplicationDirect(Long activityId);
+
     void cancelApplication(Long applicationId);
 
     void approveApplication(Long applicationId);

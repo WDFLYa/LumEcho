@@ -21,6 +21,12 @@ public class ActivityApplicationController {
         return Result.ok();
     }
 
+    @PostMapping("/{activityId}/apply-direct")
+    public Result applyDirect(@PathVariable Long activityId) {
+        activityApplicationService.createActivityApplicationDirect(activityId);
+        return Result.ok();
+    }
+
     @PostMapping("/applications/{applicationId}/cancel")
     public Result cancel(@PathVariable Long applicationId) {
         activityApplicationService.cancelApplication(applicationId);

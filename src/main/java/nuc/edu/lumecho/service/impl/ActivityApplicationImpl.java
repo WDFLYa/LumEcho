@@ -26,18 +26,43 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
     }
 
     @Override
+    public void createActivityApplicationDirect(Long activityId) {
+        ActivityApplication activityApplication = new ActivityApplication();
+        activityApplication.setActivityId(activityId);
+        activityApplication.setUserId(WdfUserContext.getCurrentUserId());
+        activityApplication.setStatus(ActivityApplicationStatusEnum.APPROVED.getCode());
+        activityApplicationMapper.insert(activityApplication);
+
+        // 免审核直接通过 → 人数+1
+        activityApplicationMapper.incrementCurrentParticipants(activityId);
+    }
+
+    @Override
     public void cancelApplication(Long applicationId) {
-        activityApplicationMapper.updateStatus(applicationId,ActivityApplicationStatusEnum.CANCELLED.getCode());
+        // 先查询报名信息
+        ActivityApplication app = activityApplicationMapper.selectById(applicationId);
+
+        // 如果是已通过状态，取消时人数-1
+        if (app != null && app.getStatus() == 1) {
+            activityApplicationMapper.decrementCurrentParticipants(app.getActivityId());
+        }
+
+        activityApplicationMapper.updateStatus(applicationId, ActivityApplicationStatusEnum.CANCELLED.getCode());
     }
 
     @Override
     public void approveApplication(Long applicationId) {
-        activityApplicationMapper.updateStatus(applicationId,ActivityApplicationStatusEnum.APPROVED.getCode());
+        ActivityApplication app = activityApplicationMapper.selectById(applicationId);
+        if (app != null) {
+            activityApplicationMapper.incrementCurrentParticipants(app.getActivityId());
+        }
+
+        activityApplicationMapper.updateStatus(applicationId, ActivityApplicationStatusEnum.APPROVED.getCode());
     }
 
     @Override
     public void rejectApplication(Long applicationId) {
-        activityApplicationMapper.updateStatus(applicationId,ActivityApplicationStatusEnum.REJECTED.getCode());
+        activityApplicationMapper.updateStatus(applicationId, ActivityApplicationStatusEnum.REJECTED.getCode());
     }
 
     @Override
