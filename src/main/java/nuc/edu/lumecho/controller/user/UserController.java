@@ -96,6 +96,7 @@ public class UserController {
 
     @PostMapping("/updateuseravatar")
     public Result updateUserAvatar(@RequestBody AvatarUpdateRequest avatarUpdateRequest) {
+        System.out.println(avatarUpdateRequest.getAvatarUrl());
         userService.updateUserAvatar(avatarUpdateRequest.getAvatarUrl());
         return Result.ok();
     }

@@ -6,6 +6,7 @@ import nuc.edu.lumecho.common.Enum.ResultCodeEnum;
 import nuc.edu.lumecho.common.Enum.UserRoleEnum;
 import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.common.exception.BusinessException;
+import nuc.edu.lumecho.common.util.GaodeUtil;
 import nuc.edu.lumecho.mapper.ActivityMapper;
 import nuc.edu.lumecho.mapper.ResourceFileMapper;
 import nuc.edu.lumecho.mapper.UserMapper;
@@ -41,6 +42,7 @@ public class ActivityServiceImpl implements ActivityService {
         if (!role.equals(UserRoleEnum.PHOTOGRAPHER.getCode())) {
             throw new BusinessException(ResultCodeEnum.NOT_PHOTOGRAPHER);
         }
+
         PhotographyActivity photographyActivity = new PhotographyActivity();
         photographyActivity.setTitle(createActivityRequest.getTitle());
         photographyActivity.setDescription(createActivityRequest.getDescription());
@@ -52,7 +54,13 @@ public class ActivityServiceImpl implements ActivityService {
         photographyActivity.setRequireAudit(createActivityRequest.getRequireAudit() ? 1 : 0);
         photographyActivity.setPhotographerId(WdfUserContext.getCurrentUserId());
         photographyActivity.setStatus(ActivityStatusEnum.PENDING.getCode());
+
+        double[] ll = GaodeUtil.getLocationByAddress(createActivityRequest.getLocation());
+        photographyActivity.setLatitude(ll[0]);
+        photographyActivity.setLongitude(ll[1]);
+
         activityMapper.insert(photographyActivity);
+
         resourceFileMapper.bindBizIdByUrl(
                 createActivityRequest.getCoverUrl(),
                 ResourceTypeEnum.ACTIVITY_COVER.getCode(),

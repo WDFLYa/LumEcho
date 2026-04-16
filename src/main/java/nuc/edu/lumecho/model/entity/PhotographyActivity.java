@@ -20,4 +20,6 @@ public class PhotographyActivity {
     private Integer requireAudit;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private Double latitude;
+    private Double longitude;
 }

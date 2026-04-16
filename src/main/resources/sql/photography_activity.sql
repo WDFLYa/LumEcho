@@ -20,3 +20,8 @@ CREATE TABLE photography_activity
     create_time          DATETIME              DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time          DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后更新时间'
 ) COMMENT '摄影活动表';
+
+
+ALTER TABLE photography_activity
+    ADD COLUMN latitude DEC(10,6) NULL COMMENT '活动纬度',
+ADD COLUMN longitude DEC(10,6) NULL COMMENT '活动经度';

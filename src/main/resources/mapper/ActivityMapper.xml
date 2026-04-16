@@ -6,14 +6,16 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO photography_activity (
-            title, description, start_time, end_time, location,
-            max_participants, current_participants, photographer_id,
-            status, require_audit, create_time, update_time
+        title, description, start_time, end_time, location,
+        max_participants, current_participants, photographer_id,
+        status, require_audit, latitude, longitude,   <!-- 这里加两个字段 -->
+        create_time, update_time
         ) VALUES (
-                     #{title}, #{description}, #{startTime}, #{endTime}, #{location},
-                     #{maxParticipants}, #{currentParticipants}, #{photographerId},
-                     #{status}, #{requireAudit}, NOW(), NOW()
-                 )
+        #{title}, #{description}, #{startTime}, #{endTime}, #{location},
+        #{maxParticipants}, #{currentParticipants}, #{photographerId},
+        #{status}, #{requireAudit}, #{latitude}, #{longitude},  <!-- 这里加两个值 -->
+        NOW(), NOW()
+        )
     </insert>
 
     <select id="selectAllActivity" resultType="PhotographyActivity">
@@ -54,5 +56,21 @@
         FROM photography_activity
         WHERE id = #{id}
     </select>
+
+    <!-- 待开始 → 进行中 -->
+    <update id="updateStatusToOngoing">
+        UPDATE photography_activity
+        SET status = 1
+        WHERE status = 0
+          AND start_time &lt;= #{now}
+    </update>
+
+    <!-- 进行中 → 已结束 -->
+    <update id="updateStatusToEnded">
+        UPDATE photography_activity
+        SET status = 2
+        WHERE status = 1
+          AND end_time &lt;= #{now}
+    </update>
 
 </mapper>
