@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ChallengeSubmissionServiceImpl implements ChallengeSubmissionService {
@@ -41,8 +42,17 @@ public class ChallengeSubmissionServiceImpl implements ChallengeSubmissionServic
 
     @Override
     public List<ChallengeSubmissionItemResponse> getSubmissionList(Long challengeId) {
+        List<ChallengeSubmission> list = challengeSubmissionMapper.selectByChallengeId(challengeId);
 
-        return challengeSubmissionMapper.selectSubmissionList(challengeId);
-
+        return list.stream().map(s -> {
+            ChallengeSubmissionItemResponse r = new ChallengeSubmissionItemResponse();
+            r.setId(s.getId());
+            r.setTitle(s.getTitle());
+            r.setContent(s.getContent());
+            r.setLocation(s.getLocation());
+            r.setFinalScore(s.getFinalScore());
+            r.setSubmitTime(s.getSubmitTime());
+            return r;
+        }).collect(Collectors.toList());
     }
 }

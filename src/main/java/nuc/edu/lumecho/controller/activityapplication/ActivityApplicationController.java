@@ -21,6 +21,12 @@ public class ActivityApplicationController {
         return Result.ok();
     }
 
+    @PostMapping("/{activityId}/apply-direct")
+    public Result applyDirect(@PathVariable Long activityId) {
+        activityApplicationService.createActivityApplicationDirect(activityId);
+        return Result.ok();
+    }
+
     @PostMapping("/applications/{applicationId}/cancel")
     public Result cancel(@PathVariable Long applicationId) {
         activityApplicationService.cancelApplication(applicationId);
@@ -44,4 +50,13 @@ public class ActivityApplicationController {
         return Result.ok(activityApplicationService.listAll());
     }
 
+    @GetMapping("/my-status/{activityId}")
+    public Result<ActivityApplication> getMyStatus(@PathVariable Long activityId) {
+        return Result.ok(activityApplicationService.getMyApplicationStatus(activityId));
+    }
+
+    @GetMapping("/list/{activityId}")
+    public Result<List<ActivityApplication>> listByActivityId(@PathVariable Long activityId) {
+        return Result.ok(activityApplicationService.listByActivityId(activityId));
+    }
 }

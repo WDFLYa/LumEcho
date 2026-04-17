@@ -6,7 +6,9 @@ import nuc.edu.lumecho.service.ChallengeApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/challengeapplication")
@@ -14,6 +16,7 @@ public class ChallengeApplicationController {
 
     @Autowired
     private ChallengeApplicationService challengeApplicationService;
+
 
     /**
      * 用户报名挑战赛
@@ -37,7 +40,6 @@ public class ChallengeApplicationController {
 
     /**
      * 管理员审核通过
-     * POST /api/challengeapplication/applications/{applicationId}/approve
      */
     @PostMapping("/applications/{applicationId}/approve")
     public Result approve(@PathVariable Long applicationId) {
@@ -47,7 +49,6 @@ public class ChallengeApplicationController {
 
     /**
      * 管理员审核拒绝
-     * POST /api/challengeapplication/applications/{applicationId}/reject
      */
     @PostMapping("/applications/{applicationId}/reject")
     public Result reject(@PathVariable Long applicationId) {
@@ -57,10 +58,48 @@ public class ChallengeApplicationController {
 
     /**
      * 获取所有报名记录
-     * GET /api/challengeapplication/applications/listall
      */
     @GetMapping("/applications/listall")
     public Result<List<ChallengeApplication>> list() {
         return Result.ok(challengeApplicationService.listAll());
+    }
+
+    // ====================== ✅ 已改造：返回状态 + 是否提交作品 ======================
+    /**
+     * 获取当前用户对某个比赛的报名状态 + 是否已提交作品
+     */
+    @GetMapping("/status/{challengeId}")
+    public Result getUserApplyStatus(@PathVariable Long challengeId) {
+        Integer applyStatus = challengeApplicationService.getUserApplyStatus(challengeId);
+        boolean hasSubmitted = challengeApplicationService.checkHasSubmittedWork(challengeId);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("applyStatus", applyStatus);
+        map.put("hasSubmitted", hasSubmitted);
+
+        return Result.ok(map);
+    }
+
+    @GetMapping("/getByUserAndChallenge")
+    public Result getByUserAndChallenge(
+            @RequestParam Long challengeId,
+            @RequestParam Long userId
+    ) {
+        ChallengeApplication application = challengeApplicationService.getByChallengeAndUser(challengeId, userId);
+        return Result.ok(application);
+    }
+
+    @GetMapping("/admin/list/{challengeId}")
+    public Result listByChallenge(@PathVariable Long challengeId) {
+        return Result.ok(challengeApplicationService.getByChallengeId(challengeId));
+    }
+
+    @PostMapping("/admin/reject/{id}")
+    public Result reject(
+            @PathVariable Long id,
+            @RequestParam String remark
+    ) {
+        challengeApplicationService.rejectWithRemark(id, remark);
+        return Result.ok();
     }
 }

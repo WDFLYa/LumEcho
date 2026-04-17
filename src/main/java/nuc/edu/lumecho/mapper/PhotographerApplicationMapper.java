@@ -5,6 +5,8 @@ import nuc.edu.lumecho.model.entity.PhotographerApplication;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface PhotographerApplicationMapper {
 
@@ -33,4 +35,20 @@ public interface PhotographerApplicationMapper {
     void updateApply(PhotographerApplication application);
 
     int updateStatus(PhotographerApplication application);
+
+    @Update("""
+    UPDATE photographer_application 
+    SET status = #{status}, 
+        reject_reason = #{rejectReason}, 
+        review_time = #{reviewTime}, 
+        reviewer_id = #{reviewerId}
+    WHERE id = #{id}
+    """)
+    int updateStatusById(PhotographerApplication application);
+
+    @Select("SELECT * FROM photographer_application ORDER BY apply_time DESC")
+    List<PhotographerApplication> selectAllApplications();
+
+    @Select("SELECT * FROM photographer_application WHERE id = #{id}")
+    PhotographerApplication selectById(@Param("id") Long id);
 }

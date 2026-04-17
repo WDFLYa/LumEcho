@@ -1,5 +1,6 @@
 package nuc.edu.lumecho.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,8 +16,10 @@ public class PhotographyActivity {
     private Integer maxParticipants;
     private Integer currentParticipants;
     private Long photographerId;
-    private int status;
-    private Boolean requireAudit;
+    private Integer status;
+    private Integer requireAudit;
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+    private Double latitude;
+    private Double longitude;
 }

@@ -43,4 +43,15 @@ public interface UserMapper {
     @Select("SELECT * FROM user WHERE id = #{id}")
     User getUserById(@Param("id") Long id);
 
+    @Select("SELECT * FROM user WHERE deleted_at IS NULL ORDER BY create_time DESC")
+    List<User> selectAllUsersForAdmin();
+
+    @Update("UPDATE user SET status = #{status}, update_time = NOW() WHERE account = #{account} AND deleted_at IS NULL")
+    int updateStatusByAccount(@Param("account") String account, @Param("status") Integer status);
+
+    @Update("UPDATE user SET role = #{role}, update_time = NOW() WHERE id = #{userId} AND deleted_at IS NULL")
+    int updateRoleByUserId(@Param("userId") Long userId, @Param("role") String role);
+
+    @Select("SELECT status FROM user WHERE id = #{id} AND deleted_at IS NULL")
+    int selectUserStatusById(@Param("id") Long id);
 }

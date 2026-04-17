@@ -35,7 +35,8 @@
             </if>
 
             <if test="keyword != null and keyword != ''">
-                AND title LIKE CONCAT('%',#{keyword},'%')
+                <!-- 👇 这里改成 标题 + 描述 同时模糊查询 -->
+                AND (title LIKE CONCAT('%',#{keyword},'%') OR description LIKE CONCAT('%',#{keyword},'%'))
             </if>
 
         </where>
@@ -92,6 +93,8 @@
             end_time,
             review_end_time,
             status,
+            rules,
+            prizes,
             max_participants,
             participant_count,
             created_at,
@@ -99,6 +102,9 @@
         FROM challenge
         WHERE id = #{id}
 
+    </select>
+    <select id="listByStatus" resultType="nuc.edu.lumecho.model.entity.Challenge">
+        SELECT * FROM challenge WHERE status = #{status}
     </select>
 
 </mapper>

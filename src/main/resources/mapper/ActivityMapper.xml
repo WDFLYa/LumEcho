@@ -2,17 +2,89 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="nuc.edu.lumecho.mapper.ActivityMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="ActivityResultMap" type="nuc.edu.lumecho.model.entity.PhotographyActivity">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="location" column="location"/>
+        <result property="maxParticipants" column="max_participants"/>
+        <result property="currentParticipants" column="current_participants"/>
+        <result property="photographerId" column="photographer_id"/>
+        <result property="status" column="status"/>
+        <result property="requireAudit" column="require_audit"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <!-- 公共条件：状态 + 模糊搜索 -->
+    <sql id="whereClause">
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (title LIKE CONCAT('%', #{keyword}, '%')
+                OR description LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+    </sql>
+
+    <!-- 原有 insert -->
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO photography_activity (
             title, description, start_time, end_time, location,
             max_participants, current_participants, photographer_id,
-            status, require_audit, create_time, update_time
+            status, require_audit, latitude, longitude,
+            create_time, update_time
         ) VALUES (
                      #{title}, #{description}, #{startTime}, #{endTime}, #{location},
                      #{maxParticipants}, #{currentParticipants}, #{photographerId},
-                     #{status}, #{requireAudit}, NOW(), NOW()
+                     #{status}, #{requireAudit}, #{latitude}, #{longitude},
+                     NOW(), NOW()
                  )
     </insert>
+
+    <!-- 原有：查询全部活动 -->
+    <select id="selectAllActivity" resultMap="ActivityResultMap">
+        SELECT * FROM photography_activity
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 原有：根据ID查询 -->
+    <select id="selectActivityById" resultMap="ActivityResultMap">
+        SELECT * FROM photography_activity
+        WHERE id = #{id}
+    </select>
+
+    <!-- 👇 新增：分页列表 + 模糊查询 + 状态筛选 -->
+    <select id="selectActivityList" resultMap="ActivityResultMap">
+        SELECT * FROM photography_activity
+        <include refid="whereClause"/>
+        ORDER BY create_time DESC
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 原有：定时任务更新状态 -->
+    <update id="updateStatusToOngoing">
+        UPDATE photography_activity
+        SET status = 1
+        WHERE status = 0
+          AND start_time &lt;= #{now}
+    </update>
+
+    <update id="updateStatusToEnded">
+        UPDATE photography_activity
+        SET status = 2
+        WHERE status = 1
+          AND end_time &lt;= #{now}
+    </update>
 
 </mapper>

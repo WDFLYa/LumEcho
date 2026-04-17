@@ -2,6 +2,7 @@ package nuc.edu.lumecho.controller.challenge;
 
 import nuc.edu.lumecho.common.Result;
 import nuc.edu.lumecho.model.dto.request.challenge.ChallengeCreateRequest;
+import nuc.edu.lumecho.model.dto.request.challenge.ChallengeSubmissionRequest;
 import nuc.edu.lumecho.model.dto.response.challenge.ChallengeListResponse;
 import nuc.edu.lumecho.model.dto.response.challenge.ChallengeSubmissionItemResponse;
 import nuc.edu.lumecho.model.entity.Challenge;
@@ -58,14 +59,10 @@ public class ChallengeController {
     public Result<List<ChallengeSubmissionItemResponse>> getSubmissionList(
             @PathVariable Long challengeId
     ) {
-
         List<ChallengeSubmissionItemResponse> list =
                 challengeSubmissionService.getSubmissionList(challengeId);
-
         return Result.ok(list);
-
     }
-
 
     /**
      * 挑战详情
@@ -77,5 +74,21 @@ public class ChallengeController {
 
         return Result.ok(challenge);
     }
+
+
+    @PostMapping("/submission/submit")
+    public Result<Void> submitSubmission(
+            @RequestBody ChallengeSubmissionRequest request
+    ) {
+        challengeSubmissionService.createChallengeSubmission(request);
+        return Result.ok();
+    }
+
+    @GetMapping("/admin/pending")
+    public Result listPendingChallenges() {
+        return Result.ok(challengeService.listPending());
+    }
+
+
 
 }

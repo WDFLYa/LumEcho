@@ -1,6 +1,8 @@
 package nuc.edu.lumecho.service;
 
 import nuc.edu.lumecho.model.entity.ChallengeApplication;
+import nuc.edu.lumecho.model.vo.ChallengeApplicationVO;
+
 import java.util.List;
 
 public interface ChallengeApplicationService {
@@ -33,4 +35,14 @@ public interface ChallengeApplicationService {
      * 获取所有报名记录
      */
     List<ChallengeApplication> listAll();
+
+    Integer getUserApplyStatus(Long challengeId);
+
+    ChallengeApplication getByChallengeAndUser(Long challengeId, Long userId);
+
+    boolean checkHasSubmittedWork(Long challengeId);
+
+    List<ChallengeApplicationVO> getByChallengeId(Long challengeId);
+
+    void rejectWithRemark(Long id, String remark);
 }

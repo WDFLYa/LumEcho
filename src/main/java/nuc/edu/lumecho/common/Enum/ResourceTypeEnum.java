@@ -9,6 +9,7 @@ public enum ResourceTypeEnum {
     POST_COVER("POST_COVER", "帖子封面"),
     POST_VIDEO("POST_VIDEO", "帖子视频"),
     ACTIVITY_COVER("ACTIVITY_COVER", "活动封面"),
+    CHALLENGE_COVER("CHALLENGE_COVER", "挑战封面"),
     CHALLENGE_SUBMISSION_IMAGE("CHALLENGE_SUBMISSION_IMAGE", "比赛作品图片");
 
     private final String code;

@@ -13,4 +13,5 @@ public class CreateActivityRequest {
     private String location;
     private Integer maxParticipants;
     private Boolean requireAudit;
+    private String coverUrl;
 }

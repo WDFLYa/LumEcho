@@ -183,10 +183,10 @@
         INNER JOIN categories c ON p.category_id = c.id
         WHERE
         p.deleted_at IS NULL
-        AND p.post_status = 1   <!-- ✨ 补充：确保帖子已发布 -->
-        AND c.status = 1        <!-- ✨ 补充：确保分类有效 -->
+        AND p.post_status = 1   <!-- 补充：确保帖子已发布 -->
+        AND c.status = 1        <!-- 补充：确保分类有效 -->
 
-        <!-- ✨ 新增：关键词模糊搜索 (标题 或 内容) -->
+        <!-- 关键词模糊搜索 (标题 或 内容) -->
         <if test="keyword != null and keyword != ''">
             AND (p.title LIKE CONCAT('%', #{keyword}, '%')
             OR p.content LIKE CONCAT('%', #{keyword}, '%'))

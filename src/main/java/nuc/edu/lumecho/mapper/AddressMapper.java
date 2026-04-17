@@ -22,4 +22,5 @@ public interface AddressMapper {
 
     @Delete("DELETE FROM address WHERE id = #{id}")
     void delete(Long id);
+
 }
