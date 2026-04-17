@@ -12,4 +12,6 @@ public interface ChallengeService {
     ChallengeListResponse getChallengeList(Integer status, String keyword, int pageNum, int pageSize);
 
     Challenge getChallengeDetail(Long id);
+
+    List<Challenge> listPending();
 }

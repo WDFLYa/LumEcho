@@ -10,5 +10,29 @@
         </set>
         WHERE id = #{id}
     </update>
+    <update id="updateById">
+        UPDATE challenge_application
+        SET
+            status = #{status},
+            remark = #{remark}
+        WHERE id = #{id}
+    </update>
 
+    <select id="listByChallengeIdWithUser" resultType="nuc.edu.lumecho.model.vo.ChallengeApplicationVO">
+        SELECT
+            ca.id AS "application.id",
+            ca.challenge_id AS "application.challengeId",
+            ca.user_id AS "application.userId",
+            ca.apply_time AS "application.applyTime",
+            ca.status AS "application.status",
+            ca.remark AS "application.remark",
+            u.username,
+            rf.file_url AS avatar
+        FROM challenge_application ca
+                 JOIN user u ON ca.user_id = u.id
+                 LEFT JOIN resource_file rf
+                           ON rf.biz_id = u.id
+                               AND rf.biz_type = 'AVATAR'
+        WHERE ca.challenge_id = #{challengeId}
+    </select>
 </mapper>

@@ -8,6 +8,7 @@ public class UserBaseInfoResponse {
     private String username;
     private String bio;
     private String avatar;
+    private String role;
     private Long fansCount;
     private Long followCount;
 }

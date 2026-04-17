@@ -1,6 +1,8 @@
 package nuc.edu.lumecho.service;
 
 import nuc.edu.lumecho.model.entity.ActivityApplication;
+import nuc.edu.lumecho.model.entity.PhotographyActivity;
+import nuc.edu.lumecho.model.vo.ActivityApplicationVO;
 
 import java.util.List;
 
@@ -20,4 +22,12 @@ public interface ActivityApplicationService {
     ActivityApplication getMyApplicationStatus(Long activityId);
 
     List<ActivityApplication> listByActivityId(Long activityId);
+
+    List<PhotographyActivity> getPendingActivityList();
+
+    List<ActivityApplicationVO> getApplyListWithUserInfo(Long activityId);
+
+    void adminApprove(Long applicationId);
+
+    void adminReject(Long applicationId);
 }

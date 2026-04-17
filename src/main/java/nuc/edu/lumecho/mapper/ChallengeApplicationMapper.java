@@ -1,6 +1,7 @@
 package nuc.edu.lumecho.mapper;
 
 import nuc.edu.lumecho.model.entity.ChallengeApplication;
+import nuc.edu.lumecho.model.vo.ChallengeApplicationVO;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,5 +25,7 @@ public interface ChallengeApplicationMapper {
     @Select("SELECT * FROM challenge_application WHERE challenge_id = #{challengeId} AND user_id = #{userId}")
     ChallengeApplication getByChallengeAndUser(Long challengeId, Long userId);
 
+    List<ChallengeApplicationVO> listByChallengeIdWithUser(Long challengeId);
 
+    void updateById(ChallengeApplication application);
 }

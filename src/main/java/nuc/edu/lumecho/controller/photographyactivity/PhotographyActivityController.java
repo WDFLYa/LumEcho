@@ -23,9 +23,15 @@ public class PhotographyActivityController {
         return Result.ok();
     }
 
+    // 👇 改成 分页 + 筛选 + 模糊查询
     @GetMapping("/list")
-    public Result<List<PhotographyActivityListResponse>> getActivityList() {
-        List<PhotographyActivityListResponse> list = activityService.getActivityList();
+    public Result<List<PhotographyActivityListResponse>> getActivityList(
+            @RequestParam(required = false) Integer status,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        List<PhotographyActivityListResponse> list = activityService.getActivityList(status, keyword, pageNum, pageSize);
         return Result.ok(list);
     }
 

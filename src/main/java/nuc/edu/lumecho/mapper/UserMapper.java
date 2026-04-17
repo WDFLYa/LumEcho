@@ -52,4 +52,6 @@ public interface UserMapper {
     @Update("UPDATE user SET role = #{role}, update_time = NOW() WHERE id = #{userId} AND deleted_at IS NULL")
     int updateRoleByUserId(@Param("userId") Long userId, @Param("role") String role);
 
+    @Select("SELECT status FROM user WHERE id = #{id} AND deleted_at IS NULL")
+    int selectUserStatusById(@Param("id") Long id);
 }

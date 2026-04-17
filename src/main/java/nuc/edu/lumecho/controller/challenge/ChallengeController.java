@@ -64,7 +64,6 @@ public class ChallengeController {
         return Result.ok(list);
     }
 
-
     /**
      * 挑战详情
      */
@@ -84,5 +83,12 @@ public class ChallengeController {
         challengeSubmissionService.createChallengeSubmission(request);
         return Result.ok();
     }
+
+    @GetMapping("/admin/pending")
+    public Result listPendingChallenges() {
+        return Result.ok(challengeService.listPending());
+    }
+
+
 
 }

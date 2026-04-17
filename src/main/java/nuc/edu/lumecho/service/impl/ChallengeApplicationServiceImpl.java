@@ -6,6 +6,7 @@ import nuc.edu.lumecho.mapper.ChallengeApplicationMapper;
 import nuc.edu.lumecho.mapper.ChallengeMapper;
 import nuc.edu.lumecho.mapper.ChallengeSubmissionMapper;
 import nuc.edu.lumecho.model.entity.ChallengeApplication;
+import nuc.edu.lumecho.model.vo.ChallengeApplicationVO;
 import nuc.edu.lumecho.service.ChallengeApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,5 +106,19 @@ public class ChallengeApplicationServiceImpl implements ChallengeApplicationServ
     public boolean checkHasSubmittedWork(Long challengeId) {
         Long userId = WdfUserContext.getCurrentUserId();
         return challengeSubmissionMapper.existsByUserIdAndChallengeId(userId, challengeId);
+    }
+
+    @Override
+    public List<ChallengeApplicationVO> getByChallengeId(Long challengeId) {
+        return challengeApplicationMapper.listByChallengeIdWithUser(challengeId);
+    }
+
+    @Override
+    public void rejectWithRemark(Long id, String remark) {
+        ChallengeApplication application = new ChallengeApplication();
+        application.setId(id);
+        application.setStatus(ChallengeApplicationStatusEnum.REJECTED.getCode());
+        application.setRemark(remark);
+        challengeApplicationMapper.updateById(application);
     }
 }

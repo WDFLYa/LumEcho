@@ -35,11 +35,21 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private ResourceFileMapper resourceFileMapper;
+
     @Override
     public void createActivity(CreateActivityRequest createActivityRequest) {
 
-        String role = userMapper.getUserRoleById(WdfUserContext.getCurrentUserId());
-        if (!role.equals(UserRoleEnum.PHOTOGRAPHER.getCode())) {
+        // 🔥 1. 先获取当前用户ID
+        Long userId = WdfUserContext.getCurrentUserId();
+        if (userId == null) {
+            throw new BusinessException(ResultCodeEnum.FAIL);
+        }
+
+        // 🔥 2. 获取角色，并判断空值
+        String role = userMapper.getUserRoleById(userId);
+        if (role == null ||
+                (!role.equals(UserRoleEnum.ADMIN.getCode()) &&
+                        !role.equals(UserRoleEnum.PHOTOGRAPHER.getCode()))) {
             throw new BusinessException(ResultCodeEnum.NOT_PHOTOGRAPHER);
         }
 
@@ -52,7 +62,7 @@ public class ActivityServiceImpl implements ActivityService {
         photographyActivity.setMaxParticipants(createActivityRequest.getMaxParticipants());
         photographyActivity.setCurrentParticipants(0);
         photographyActivity.setRequireAudit(createActivityRequest.getRequireAudit() ? 1 : 0);
-        photographyActivity.setPhotographerId(WdfUserContext.getCurrentUserId());
+        photographyActivity.setPhotographerId(userId);
         photographyActivity.setStatus(ActivityStatusEnum.PENDING.getCode());
 
         double[] ll = GaodeUtil.getLocationByAddress(createActivityRequest.getLocation());
@@ -69,8 +79,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<PhotographyActivityListResponse> getActivityList() {
-        List<PhotographyActivity> activityList = activityMapper.selectAllActivity();
+    public List<PhotographyActivityListResponse> getActivityList(Integer status, String keyword, int pageNum, int pageSize) {
+        int offset = (pageNum - 1) * pageSize;
+        List<PhotographyActivity> activityList = activityMapper.selectActivityList(status, keyword, offset, pageSize);
 
         return activityList.stream().map(activity -> {
             PhotographyActivityListResponse resp = new PhotographyActivityListResponse();
@@ -87,7 +98,6 @@ public class ActivityServiceImpl implements ActivityService {
             resp.setStatus(activity.getStatus());
             resp.setRequireAudit(activity.getRequireAudit());
 
-            // 封面
             List<ResourceFile> covers = resourceFileMapper.selectByBizIdAndTypes(
                     activity.getId(),
                     Collections.singletonList(ResourceTypeEnum.ACTIVITY_COVER.getCode())
@@ -103,18 +113,13 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public PhotographyActivityListResponse getActivityDetail(Long id) {
         PhotographyActivity activity = activityMapper.selectActivityById(id);
-
         return convertResponse(activity);
     }
 
-    /**
-     * 抽取公共转换方法（列表+详情共用）
-     */
     private PhotographyActivityListResponse convertResponse(PhotographyActivity activity) {
         PhotographyActivityListResponse resp = new PhotographyActivityListResponse();
         BeanUtils.copyProperties(activity, resp);
 
-        // 封面图
         List<ResourceFile> covers = resourceFileMapper.selectByBizIdAndTypes(
                 activity.getId(),
                 Collections.singletonList(ResourceTypeEnum.ACTIVITY_COVER.getCode())
@@ -125,6 +130,4 @@ public class ActivityServiceImpl implements ActivityService {
 
         return resp;
     }
-
-
 }

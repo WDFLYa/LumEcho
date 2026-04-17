@@ -131,6 +131,11 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challengeMapper.selectById(id);
     }
 
+    @Override
+    public List<Challenge> listPending() {
+        return challengeMapper.listByStatus(ChallengeStatus.NOT_STARTED.getCode());
+    }
+
     /**
      * 状态文本
      */

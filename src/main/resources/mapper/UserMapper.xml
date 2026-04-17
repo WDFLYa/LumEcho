@@ -54,6 +54,7 @@
         u.bio,
         u.fans_count,
         u.follow_count,
+        u.role,
         rf.file_url AS avatar
         FROM user u
         LEFT JOIN resource_file rf

@@ -3,10 +3,15 @@ package nuc.edu.lumecho.service.impl;
 import nuc.edu.lumecho.common.Enum.ActivityApplicationStatusEnum;
 import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.mapper.ActivityApplicationMapper;
+import nuc.edu.lumecho.mapper.PhotographyActivityMapper;
 import nuc.edu.lumecho.model.entity.ActivityApplication;
+import nuc.edu.lumecho.model.entity.PhotographyActivity;
+import nuc.edu.lumecho.model.vo.ActivityApplicationVO;
 import nuc.edu.lumecho.service.ActivityApplicationService;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +20,10 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
 
     @Autowired
     private ActivityApplicationMapper activityApplicationMapper;
+
+    @Autowired
+    private PhotographyActivityMapper photographyActivityMapper;
+
 
     @Override
     public void createActivityApplication(Long activityId) {
@@ -79,5 +88,33 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
     @Override
     public List<ActivityApplication> listByActivityId(Long activityId) {
         return activityApplicationMapper.listByActivityId(activityId);
+    }
+
+    @Override
+    public List<PhotographyActivity> getPendingActivityList() {
+        return photographyActivityMapper.selectPendingActivity();
+    }
+
+    @Override
+    public List<ActivityApplicationVO> getApplyListWithUserInfo(Long activityId) {
+        return activityApplicationMapper.selectApplicationListWithUser(activityId);
+    }
+
+    @Override
+    @Transactional
+    public void adminApprove(Long applicationId) {
+        ActivityApplication app = new ActivityApplication();
+        app.setId(applicationId);
+        app.setStatus(ActivityApplicationStatusEnum.APPROVED.getCode());
+        activityApplicationMapper.updateById(app);
+    }
+
+    @Override
+    @Transactional
+    public void adminReject(Long applicationId) {
+        ActivityApplication app = new ActivityApplication();
+        app.setId(applicationId);
+        app.setStatus(ActivityApplicationStatusEnum.REJECTED.getCode());
+        activityApplicationMapper.updateById(app);
     }
 }

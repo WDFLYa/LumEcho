@@ -88,4 +88,18 @@ public class ChallengeApplicationController {
         ChallengeApplication application = challengeApplicationService.getByChallengeAndUser(challengeId, userId);
         return Result.ok(application);
     }
+
+    @GetMapping("/admin/list/{challengeId}")
+    public Result listByChallenge(@PathVariable Long challengeId) {
+        return Result.ok(challengeApplicationService.getByChallengeId(challengeId));
+    }
+
+    @PostMapping("/admin/reject/{id}")
+    public Result reject(
+            @PathVariable Long id,
+            @RequestParam String remark
+    ) {
+        challengeApplicationService.rejectWithRemark(id, remark);
+        return Result.ok();
+    }
 }

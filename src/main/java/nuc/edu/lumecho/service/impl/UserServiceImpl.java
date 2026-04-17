@@ -57,6 +57,12 @@ public class UserServiceImpl implements UserService {
         }
 
         Long userId = userMapper.selectUserIdByAccount(account);
+
+        int status = userMapper.selectUserStatusById(userId);
+        if (status == 0){
+            throw new BusinessException(ResultCodeEnum.ADMIN_USER_DISABLED_ERROR);
+        }
+
         String token = WdfTokenUtil.generateLoginToken();
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setToken(token);

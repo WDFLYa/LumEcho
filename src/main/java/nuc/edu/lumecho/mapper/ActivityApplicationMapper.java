@@ -1,6 +1,7 @@
 package nuc.edu.lumecho.mapper;
 
 import nuc.edu.lumecho.model.entity.ActivityApplication;
+import nuc.edu.lumecho.model.vo.ActivityApplicationVO;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,4 +32,11 @@ public interface ActivityApplicationMapper {
 
     @Select("SELECT * FROM activity_application WHERE id = #{id}")
     ActivityApplication selectById(@Param("id") Long id);
+
+    List<ActivityApplicationVO> selectApplyList(Long activityId);
+
+
+    void updateById(ActivityApplication app);
+
+    List<ActivityApplicationVO> selectApplicationListWithUser(Long activityId);
 }

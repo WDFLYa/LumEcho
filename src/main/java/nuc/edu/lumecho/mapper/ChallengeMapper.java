@@ -64,4 +64,5 @@ public interface ChallengeMapper {
     @Update("UPDATE challenge SET participant_count = participant_count + 1 WHERE id = #{id}")
     int increaseParticipantCount(@Param("id") Long id);
 
+    List<Challenge> listByStatus(@Param("status") int status);
 }

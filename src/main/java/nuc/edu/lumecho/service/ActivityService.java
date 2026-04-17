@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface ActivityService {
     void createActivity(CreateActivityRequest request);
-    List<PhotographyActivityListResponse> getActivityList();
+    // 👇 加参数
+    List<PhotographyActivityListResponse> getActivityList(Integer status, String keyword, int pageNum, int pageSize);
 
     PhotographyActivityListResponse getActivityDetail(Long id);
 }

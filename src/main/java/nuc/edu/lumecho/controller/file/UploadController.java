@@ -43,7 +43,6 @@ public class UploadController {
             @RequestParam("file") MultipartFile file
     ) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
 
-
         // 调用 Service 层的更新头像方法
         // 该方法内部会自动获取当前用户 ID 并更新数据库记录
         String url = fileService.updateUserAvatar(file);
