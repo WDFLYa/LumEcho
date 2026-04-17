@@ -24,7 +24,7 @@ public interface UserService {
 
     UserDetailInfoResponse GetUserDetailInfo();
 
-    void updateUserAvatar(String avatarUrl);
+    int updateUserAvatar(String avatarUrl);
 
     List<FollowListResponse> selectFollowList(Long userId);
     List<FollowListResponse> selectFollowerList(Long userId);

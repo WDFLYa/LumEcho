@@ -9,4 +9,5 @@ import java.security.NoSuchAlgorithmException;
 
 public interface FileService {
     String uploadFile(MultipartFile file, String bizType) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
+    String updateUserAvatar(MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
 }

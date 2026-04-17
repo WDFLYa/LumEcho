@@ -40,4 +40,7 @@ public interface ResourceFileMapper {
             @Param("bizType") String bizType,
             @Param("bizId") Long bizId
     );
+
+    @Select("SELECT COUNT(*) FROM resource_file WHERE biz_id = #{bizId} AND biz_type = #{bizType}")
+    int countByBizIdAndType(@Param("bizId") Long bizId, @Param("bizType") String bizType);
 }

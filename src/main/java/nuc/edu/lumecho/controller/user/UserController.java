@@ -2,14 +2,18 @@ package nuc.edu.lumecho.controller.user;
 
 
 import nuc.edu.lumecho.common.Result;
+import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.model.dto.request.user.*;
 import nuc.edu.lumecho.model.dto.response.LoginResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserBaseInfoResponse;
 import nuc.edu.lumecho.model.dto.response.user.UserDetailInfoResponse;
 import nuc.edu.lumecho.model.entity.User;
+import nuc.edu.lumecho.service.FileService;
+import nuc.edu.lumecho.service.ResourceFileService;
 import nuc.edu.lumecho.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -22,6 +26,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FileService fileService;
+
+    @Autowired
+    private ResourceFileService resourceFileService;
     @PostMapping("login/account")
     public Result<LoginResponse> loginByAccount(@RequestBody @Valid UserAccountLoginRequest userAccountLoginRequest) {
         LoginResponse loginResponse = userService.loginByAccount(userAccountLoginRequest);
@@ -94,10 +103,5 @@ public class UserController {
         return Result.ok();
     }
 
-    @PostMapping("/updateuseravatar")
-    public Result updateUserAvatar(@RequestBody AvatarUpdateRequest avatarUpdateRequest) {
-        System.out.println(avatarUpdateRequest.getAvatarUrl());
-        userService.updateUserAvatar(avatarUpdateRequest.getAvatarUrl());
-        return Result.ok();
-    }
+
 }

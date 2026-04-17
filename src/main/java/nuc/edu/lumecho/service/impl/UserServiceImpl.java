@@ -184,8 +184,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserAvatar(String avatarUrl) {
-        resourceFileMapper.updateUserAvatar(avatarUrl, ResourceTypeEnum.AVATAR.getCode(),WdfUserContext.getCurrentUserId());
+    public int updateUserAvatar(String avatarUrl) {
+       return resourceFileMapper.updateUserAvatar(avatarUrl, ResourceTypeEnum.AVATAR.getCode(),WdfUserContext.getCurrentUserId());
     }
 
     @Override
