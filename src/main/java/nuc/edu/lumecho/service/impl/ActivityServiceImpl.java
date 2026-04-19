@@ -8,6 +8,7 @@ import nuc.edu.lumecho.common.WdfUserContext;
 import nuc.edu.lumecho.common.exception.BusinessException;
 import nuc.edu.lumecho.common.util.GaodeUtil;
 import nuc.edu.lumecho.mapper.ActivityMapper;
+import nuc.edu.lumecho.mapper.PhotographyActivityMapper;
 import nuc.edu.lumecho.mapper.ResourceFileMapper;
 import nuc.edu.lumecho.mapper.UserMapper;
 import nuc.edu.lumecho.model.dto.request.photographer.CreateActivityRequest;
@@ -29,6 +30,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     private ActivityMapper activityMapper;
+
+    @Autowired
+    private PhotographyActivityMapper photographyActivityMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -114,6 +118,12 @@ public class ActivityServiceImpl implements ActivityService {
     public PhotographyActivityListResponse getActivityDetail(Long id) {
         PhotographyActivity activity = activityMapper.selectActivityById(id);
         return convertResponse(activity);
+    }
+
+    @Override
+    public boolean cancelActivity(Long id) {
+        int result = photographyActivityMapper.cancelActivity(id);
+        return result > 0;
     }
 
     private PhotographyActivityListResponse convertResponse(PhotographyActivity activity) {

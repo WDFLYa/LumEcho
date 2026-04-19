@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface PhotographyActivityMapper {
 
     List<PhotographyActivity> selectPendingActivity();
+
+    int cancelActivity(Long id);
 }

@@ -49,6 +49,18 @@ public class PostController {
         return Result.ok(postDetailResponse);
     }
 
+    @GetMapping("/select/all/post")
+    public Result<PostHomePageResponse> getAllPosts(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Integer status,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "10") int limit) {
+
+        return Result.ok(
+                postService.selectAllPosts(keyword, status, offset, limit)
+        );
+    }
+
     @GetMapping("/select/all")
     public Result<PostHomePageResponse> getHomePosts(
             @RequestParam(required = false) String keyword,

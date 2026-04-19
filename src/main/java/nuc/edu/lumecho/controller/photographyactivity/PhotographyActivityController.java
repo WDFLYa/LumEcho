@@ -40,4 +40,11 @@ public class PhotographyActivityController {
         PhotographyActivityListResponse detail = activityService.getActivityDetail(id);
         return Result.ok(detail);
     }
+
+
+    @PostMapping("/cancel/{id}")
+    public Result<Boolean> cancelActivity(@PathVariable Long id) {
+        activityService.cancelActivity(id);
+        return Result.ok();
+    }
 }

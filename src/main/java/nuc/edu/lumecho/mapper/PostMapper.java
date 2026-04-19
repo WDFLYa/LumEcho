@@ -25,6 +25,19 @@ public interface PostMapper {
     @Select("SELECT * FROM posts WHERE id = #{id} AND deleted_at IS NULL")
     Post selectById(@Param("id") Long id);
 
+    List<PostHomeItemResponse> selectAllPosts(
+            @Param("keyword") String keyword,
+            @Param("status") Integer status,
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId,
+            @Param("offset") int offset,
+            @Param("limit") int limit
+    );
+
+    long countValidPosts(
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId
+    );
 
     List<PostHomeItemResponse> selectHomePosts(
             @Param("keyword") String keyword,
@@ -63,7 +76,12 @@ public interface PostMapper {
     long countUserPosts(@Param("userId") Long userId);
     long countValidPosts(@Param("keyword") String keyword,@Param("userId") Long userId, @Param("categoryId") Long categoryId);
 
-
+    long countValidAllPosts(
+            @Param("keyword") String keyword,
+            @Param("status") Integer status,
+            @Param("userId") Long userId,
+            @Param("categoryId") Long categoryId
+    );
     @Update("UPDATE posts SET comment_count = comment_count + 1 WHERE id = #{postId}")
     void incrementCommentCount(@Param("postId") Long postId);
 

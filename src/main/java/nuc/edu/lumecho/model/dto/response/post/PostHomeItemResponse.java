@@ -10,6 +10,7 @@ public class PostHomeItemResponse {
     private String username;
     private String avatar;
     private String title;
+    private Integer status;
     private String cover;
     private Integer likes;
     private Integer comments;

@@ -53,6 +53,7 @@ public interface ChallengeMapper {
     @Update("UPDATE challenge " +
             "SET status = #{newStatus} " +
             "WHERE status = #{oldStatus} " +
+            "AND status != 4 " +
             "AND ${timeField} <= #{now}")
     int updateStatusByTime(
             @Param("oldStatus") int oldStatus,
@@ -60,6 +61,12 @@ public interface ChallengeMapper {
             @Param("timeField") String timeField,
             @Param("now") LocalDateTime now
     );
+
+    @Update("UPDATE challenge " +
+            "SET status = 4 " +
+            "WHERE id = #{id} " +
+            "AND status IN (0,1,2)")
+    int cancelChallenge(@Param("id") Long id);
 
     @Update("UPDATE challenge SET participant_count = participant_count + 1 WHERE id = #{id}")
     int increaseParticipantCount(@Param("id") Long id);

@@ -6,7 +6,9 @@ import lombok.Getter;
 public enum ActivityStatusEnum {
     PENDING(0, "待开始"),
     ONGOING(1, "进行中"),
-    FINISHED(2, "已结束");
+    FINISHED(2, "已结束"),
+    CANCELLED(3, "已取消");
+
 
     private final int code;
     private final String description;

@@ -274,7 +274,7 @@ public class UserServiceImpl implements UserService {
             resp.setUpdateTime(user.getUpdateTime());
             // 如果有 bio 或 avatar，也记得 set
             // resp.setBio(user.getBio());
-            // resp.setAvatar(user.getAvatar());
+            resp.setAvatar(userMapper.selectUserBaseInfoById(user.getId()).getAvatar());
             return resp;
         }).collect(Collectors.toList());
     }

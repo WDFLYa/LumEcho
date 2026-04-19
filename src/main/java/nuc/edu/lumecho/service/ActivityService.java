@@ -12,4 +12,7 @@ public interface ActivityService {
     List<PhotographyActivityListResponse> getActivityList(Integer status, String keyword, int pageNum, int pageSize);
 
     PhotographyActivityListResponse getActivityDetail(Long id);
+
+
+    boolean cancelActivity(Long id);
 }

@@ -126,6 +126,27 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostHomePageResponse selectAllPosts(String keyword, Integer status, int offset, int limit) {
+
+        List<PostHomeItemResponse> list =
+                postMapper.selectAllPosts(keyword, status, null, null, offset, limit);
+
+        for (PostHomeItemResponse item : list) {
+            if (item.getCreateTime() != null) {
+                item.setTimeAgo(formatTimeAgo(item.getCreateTime()));
+            }
+        }
+
+        long total = postMapper.countValidAllPosts(keyword, status, null, null);
+
+        PostHomePageResponse res = new PostHomePageResponse();
+        res.setData(list);
+        res.setHasMore((offset + list.size()) < total);
+        res.setTotal(total);
+
+        return res;
+    }
+    @Override
     public PostHomePageResponse selectHomePosts(int offset, int limit) {
         List<PostHomeItemResponse> postHomeItemResponses = postMapper.selectHomePosts(null,null,null,offset, limit);
         for (PostHomeItemResponse item : postHomeItemResponses) {

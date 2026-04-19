@@ -57,8 +57,7 @@ public class PhotographerApplicationServiceImpl implements PhotographerApplicati
     // ✅ 实现：审核申请
     @Override
     public void reviewApplication(Long id, Integer status, String rejectReason, Long reviewerId) {
-        PhotographerApplication app = new PhotographerApplication();
-        app.setId(id);
+        PhotographerApplication app = photographerApplicationMapper.selectById(id);
         app.setStatus(status);
         app.setRejectReason(rejectReason); // 如果通过，这里传 null
         app.setReviewTime(LocalDateTime.now());
@@ -66,7 +65,7 @@ public class PhotographerApplicationServiceImpl implements PhotographerApplicati
 
         photographerApplicationMapper.updateStatusById(app);
 
-        if (status == 1) {
+        if (status == 1 && app.getUserId() != null) {
             userMapper.updateRoleByUserId(app.getUserId(), "PHOTOGRAPHER");
         }
     }

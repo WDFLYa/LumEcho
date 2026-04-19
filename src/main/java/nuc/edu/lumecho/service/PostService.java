@@ -16,10 +16,18 @@ public interface PostService {
     void updatePost(UpdatePostRequest updatePostRequest);
     void deletePost(PostIdRequest postIdRequest);
     PostDetailResponse selectPostById(Long id);
+
+    PostHomePageResponse selectAllPosts(
+            String keyword,
+            Integer status,
+            int offset,
+            int limit);
     PostHomePageResponse selectHomePosts(
             @Param("offset") int offset,
             @Param("limit") int limit
     );
+
+
 
     PostHomePageResponse selectHomePostsByHot(
             @Param("offset") int offset,

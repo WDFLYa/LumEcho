@@ -14,4 +14,6 @@ public interface ChallengeService {
     Challenge getChallengeDetail(Long id);
 
     List<Challenge> listPending();
+
+    int cancelChallenge(Long id);
 }

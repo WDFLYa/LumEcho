@@ -89,6 +89,10 @@ public class ChallengeController {
         return Result.ok(challengeService.listPending());
     }
 
-
+    @PostMapping("/cancel/{id}")
+    public Result cancelChallenge(@PathVariable Long id) {
+        challengeService.cancelChallenge(id);
+        return Result.ok();
+    }
 
 }

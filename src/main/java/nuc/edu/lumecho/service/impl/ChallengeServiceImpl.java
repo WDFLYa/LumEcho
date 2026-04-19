@@ -136,6 +136,12 @@ public class ChallengeServiceImpl implements ChallengeService {
         return challengeMapper.listByStatus(ChallengeStatus.NOT_STARTED.getCode());
     }
 
+    @Override
+    public int cancelChallenge(Long id) {
+        int rows = challengeMapper.cancelChallenge(id);
+        return rows;
+    }
+
     /**
      * 状态文本
      */
