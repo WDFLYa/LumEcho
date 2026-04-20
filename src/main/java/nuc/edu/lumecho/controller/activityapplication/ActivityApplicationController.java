@@ -59,4 +59,6 @@ public class ActivityApplicationController {
     public Result<List<ActivityApplication>> listByActivityId(@PathVariable Long activityId) {
         return Result.ok(activityApplicationService.listByActivityId(activityId));
     }
+
+
 }

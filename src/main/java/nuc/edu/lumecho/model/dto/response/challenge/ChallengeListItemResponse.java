@@ -14,7 +14,7 @@ public class ChallengeListItemResponse {
     private Long id;
     private String title;
     private String description;
-
+    private String cover;
     /**
      * 状态文案 (例如: "报名中", "作品评审中", "已结束")
      * 前端直接使用此字段显示标签，无需转换数字

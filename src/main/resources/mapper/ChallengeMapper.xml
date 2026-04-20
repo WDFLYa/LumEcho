@@ -104,7 +104,24 @@
 
     </select>
     <select id="listByStatus" resultType="nuc.edu.lumecho.model.entity.Challenge">
-        SELECT * FROM challenge WHERE status = #{status}
+        SELECT
+            c.*,
+            -- 总报名人数
+            COUNT(ca.id) AS apply_count,
+            -- 已通过人数（只统计审核通过的）
+            COUNT(CASE WHEN ca.status = 1 THEN 1 END) AS participant_count
+        FROM challenge c
+                 LEFT JOIN challenge_application ca
+                           ON c.id = ca.challenge_id
+        WHERE c.status = #{status}
+        GROUP BY c.id
+        ORDER BY c.created_at DESC
     </select>
-
+    <select id="selectChallengeCoverByChallengeId" resultType="java.lang.String">
+        SELECT file_url
+        FROM resource_file
+        WHERE biz_type = 'CHALLENGE_COVER'
+          AND biz_id = #{challengeId}
+            LIMIT 1
+    </select>
 </mapper>

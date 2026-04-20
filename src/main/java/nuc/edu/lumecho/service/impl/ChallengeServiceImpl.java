@@ -77,10 +77,12 @@ public class ChallengeServiceImpl implements ChallengeService {
             item.setId(challenge.getId());
             item.setTitle(challenge.getTitle());
             item.setDescription(challenge.getDescription());
+            item.setCover(challengeMapper.selectChallengeCoverByChallengeId(challenge.getId()));
 
             item.setStartTime(challenge.getStartTime());
             item.setEndTime(challenge.getEndTime());
             item.setReviewEndTime(challenge.getReviewEndTime());
+
 
             Integer max = challenge.getMaxParticipants();
 

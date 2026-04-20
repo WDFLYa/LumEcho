@@ -117,4 +117,6 @@ public class ActivityApplicationImpl implements ActivityApplicationService {
         app.setStatus(ActivityApplicationStatusEnum.REJECTED.getCode());
         activityApplicationMapper.updateById(app);
     }
+
+
 }

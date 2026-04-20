@@ -39,4 +39,6 @@ public interface ActivityApplicationMapper {
     void updateById(ActivityApplication app);
 
     List<ActivityApplicationVO> selectApplicationListWithUser(Long activityId);
+
+
 }

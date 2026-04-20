@@ -54,7 +54,6 @@ public class ChallengeApplicationServiceImpl implements ChallengeApplicationServ
 
         challengeApplicationMapper.insert(application);
 
-        challengeMapper.increaseParticipantCount(challengeId);
     }
 
     // 你原来的

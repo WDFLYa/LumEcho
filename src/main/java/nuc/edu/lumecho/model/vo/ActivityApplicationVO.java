@@ -10,7 +10,7 @@ public class ActivityApplicationVO {
     private Long userId;
     private Integer status;
     private LocalDateTime createTime;
-
+    private Integer applicationCount;
     // 关联查询字段
     private String username;
     private String avatar;

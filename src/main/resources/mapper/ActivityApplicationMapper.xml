@@ -12,15 +12,25 @@
         WHERE id = #{id}
     </update>
 
-    <!-- 你需要的：updateById -->
+    <!-- 审核通过时，自动给活动人数 +1 -->
     <update id="updateById">
-        UPDATE activity_application
-        <set>
-            <if test="status != null">status = #{status}</if>
-        </set>
-        WHERE id = #{id}
-    </update>
+        UPDATE activity_application a
+        JOIN photography_activity pa ON a.activity_id = pa.id
 
+        <set>
+            <if test="status != null">
+                a.status = #{status},
+
+                <!-- 重点：只有更新成 1（已通过）时，才执行 +1 -->
+                pa.current_participants =
+                CASE WHEN #{status} = 1 THEN pa.current_participants + 1
+                ELSE pa.current_participants
+                END
+            </if>
+        </set>
+
+        WHERE a.id = #{id}
+    </update>
     <select id="selectApplicationListWithUser" resultType="nuc.edu.lumecho.model.vo.ActivityApplicationVO">
         SELECT
             a.id,

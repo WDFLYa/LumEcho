@@ -30,4 +30,5 @@ public interface ActivityApplicationService {
     void adminApprove(Long applicationId);
 
     void adminReject(Long applicationId);
+
 }

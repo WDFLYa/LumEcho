@@ -12,11 +12,17 @@
     <select id="selectPendingActivity"
             resultType="nuc.edu.lumecho.model.entity.PhotographyActivity">
 
-        SELECT a.*,
-               COUNT(ap.id) AS currentParticipants
+        SELECT
+            a.*,
+            -- 总报名人数（所有状态）
+            COUNT(ap.id) AS apply_count,
+            -- 已通过人数（只统计 status=1）
+            COUNT(CASE WHEN ap.status = 1 THEN 1 END) AS current_participants
+
         FROM photography_activity a
                  LEFT JOIN activity_application ap
-                           ON a.id = ap.activity_id AND ap.status = 1
+                           ON a.id = ap.activity_id
+
         WHERE a.status = 0
         GROUP BY a.id
         ORDER BY a.create_time DESC

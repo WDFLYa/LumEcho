@@ -22,4 +22,5 @@ public class PhotographyActivity {
     private LocalDateTime updateTime;
     private Double latitude;
     private Double longitude;
+    private Integer applyCount;
 }

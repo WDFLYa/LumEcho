@@ -19,4 +19,5 @@ public class Challenge {
     private String prizes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Integer applyCount;
 }

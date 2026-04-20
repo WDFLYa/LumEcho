@@ -33,6 +33,8 @@ public interface ChallengeMapper {
             @Param("limit") int limit
     );
 
+    String selectChallengeCoverByChallengeId(@Param("challengeId") Long challengeId);
+
 
     int countChallengeList(
             @Param("status") Integer status,

@@ -4,11 +4,15 @@
 <mapper namespace="nuc.edu.lumecho.mapper.ChallengeApplicationMapper">
 
     <update id="updateStatus">
-        UPDATE challenge_application
+        UPDATE challenge_application ca
+        JOIN challenge c ON ca.challenge_id = c.id
+
         <set>
-            <if test="status != null">status = #{status},</if>
+            ca.status = #{status},
+            c.participant_count = CASE WHEN #{status} = 1 THEN c.participant_count + 1 ELSE c.participant_count END
         </set>
-        WHERE id = #{id}
+
+        WHERE ca.id = #{id}
     </update>
     <update id="updateById">
         UPDATE challenge_application

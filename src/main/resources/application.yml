@@ -2,8 +2,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/lumecho?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: lumecho
-    password: 273727
+    username: root
+    password: root
 
   redis:
     host: 127.0.0.1
@@ -12,14 +12,14 @@ spring:
     timeout: 2000ms
 
   minio:
-    endpoint: http://47.116.108.205:9000
+    endpoint: http://localhost:9000
     access-key: minioadmin
     secret-key: minioadmin
     bucket: lumecho
 
   servlet:
     multipart:
-      max-file-size: 10MB
+      max-file-size: 20MB
       max-request-size: 20MB
 
 mybatis:
