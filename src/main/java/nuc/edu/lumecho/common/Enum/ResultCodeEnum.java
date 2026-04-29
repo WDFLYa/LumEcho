@@ -14,6 +14,8 @@ public enum ResultCodeEnum {
     REPEAT_SUBMIT(206, "重复提交"),
     DELETE_ERROR(207, "请先删除子集"),
 
+    ADMIN_EMAIL_NOT_EXIST_ERROR(296,"该邮箱不存在" ),
+    ADMIN_EMAIL_EXIST_ERROR(297,"该邮箱已存在" ),
     ADMIN_USER_DISABLED_ERROR(298,"该账号已被禁用，请联系管理员处理"),
     ADMIN_PHONE_NOT_EXIST_ERROR(299, "手机号不存在"),
     ADMIN_PHONE_EXIST_ERROR(300,"手机号已存在"),
@@ -46,6 +48,7 @@ public enum ResultCodeEnum {
     FOLLOW_SELF_FORBIDDEN(801, "不能关注自己"),
     FOLLOW_ALREADY_EXISTS(802, "您已关注该用户，无需重复关注"),
     FOLLOW_NOT_EXISTS(803, "您尚未关注该用户，无法取消");
+
 
     private final Integer code;
     private final String message;

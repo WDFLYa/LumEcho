@@ -43,6 +43,14 @@ public class UserController {
         return Result.ok(loginResponse);
     }
 
+    @PostMapping("login/email")
+    public Result<LoginResponse> loginByEmail(@RequestBody @Valid UserEmailLoginRequest userEmailLoginRequest) {
+        LoginResponse loginResponse = userService.loginByEmail(userEmailLoginRequest);
+        return Result.ok(loginResponse);
+    }
+
+
+
     @PostMapping("update")
     public Result updateUserInfo(@RequestBody @Valid UserUpdateRequest userUpdateRequest) {
         userService.updateUserInfo(userUpdateRequest);
@@ -64,6 +72,12 @@ public class UserController {
     @PostMapping("complete/phone")
     public Result completePhone(@RequestBody @Valid CompletePhoneRequest completePhoneRequest) {
         userService.completePhone(completePhoneRequest);
+        return Result.ok();
+    }
+
+    @PostMapping("complete/email")
+    public Result completeEmail(@RequestBody @Valid CompleteEmailRequest completeEmailRequest) {
+        userService.completeEmail(completeEmailRequest);
         return Result.ok();
     }
 

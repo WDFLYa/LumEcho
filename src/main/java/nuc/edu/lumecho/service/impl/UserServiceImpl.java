@@ -107,6 +107,54 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public LoginResponse loginByEmail(UserEmailLoginRequest userEmailLoginRequest) {
+        // 1. 获取邮箱
+        String email = userEmailLoginRequest.getEmail();
+
+        // 2. 判断邮箱是否存在（和手机逻辑一样）
+        if(!userMapper.existsByEmail(email)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_EMAIL_NOT_EXIST_ERROR);
+        }
+
+        // 3. 获取用户输入的验证码
+        String inputCode = userEmailLoginRequest.getCode();
+
+        // 4. 从Redis取出邮箱验证码（KEY换成邮箱的）
+        String code = stringRedisTemplate.opsForValue().get(RedisKeyConstants.EMAIL_LOGIN_CODE_KEY + email);
+
+        // 5. 验证码是否过期
+        if(WdfStringUtil.isBlank(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_NOT_FOUND);
+        }
+
+        // 6. 验证码是否正确
+        if(!inputCode.equals(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
+        }
+
+        // 7. 根据邮箱查询用户ID
+        Long userId = userMapper.selectUserIdByEmail(email);
+
+        // 8. 生成TOKEN
+        String token = WdfTokenUtil.generateLoginToken();
+        String key = RedisKeyConstants.USER_TOKEN_KEY + token;
+        stringRedisTemplate.opsForValue().set(key, String.valueOf(userId),30, TimeUnit.MINUTES);
+
+        // 9. 封装返回结果
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setToken(token);
+        loginResponse.setUserId(userId);
+        loginResponse.setRole(userMapper.getUserRoleById(userId));
+
+        // 10. 设置用户上下文
+        WdfUserContext.setCurrentUserId(userId);
+        System.out.printf("邮箱登录成功");
+        System.out.printf(WdfUserContext.getCurrentUserId().toString());
+
+        return loginResponse;
+    }
+
+    @Override
     public void updateUserInfo(UserUpdateRequest userUpdateRequest) {
         User user = new User();
         user.setId(WdfUserContext.getCurrentUserId());
@@ -155,6 +203,26 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setId(WdfUserContext.getCurrentUserId());
         user.setPhone(phone);
+        userMapper.updateUser(user);
+    }
+
+    @Override
+    public void completeEmail(CompleteEmailRequest completeEmailRequest) {
+        String email = completeEmailRequest.getEmail();
+        if(userMapper.existsByEmail(email)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_EMAIL_EXIST_ERROR);
+        }
+        String inputCode = completeEmailRequest.getCode();
+        String code = stringRedisTemplate.opsForValue().get(RedisKeyConstants.EMAIL_COMPLETE_CODE_KEY + email);
+        if(WdfStringUtil.isBlank(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_NOT_FOUND);
+        }
+        if(!inputCode.equals(code)){
+            throw new BusinessException(ResultCodeEnum.ADMIN_CAPTCHA_CODE_ERROR);
+        }
+        User user = new User();
+        user.setId(WdfUserContext.getCurrentUserId());
+        user.setEmail(email);
         userMapper.updateUser(user);
     }
 

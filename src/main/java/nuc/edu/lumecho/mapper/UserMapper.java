@@ -16,11 +16,21 @@ public interface UserMapper {
     @Select("SELECT COUNT(1) FROM user WHERE phone = #{phone} AND deleted_at IS NULL")
     boolean existsByPhone(@Param("phone") String phone);
 
+    @Select("SELECT COUNT(1) FROM user WHERE email = #{email} AND deleted_at IS NULL")
+    boolean existsByEmail(@Param("email") String email);
+
     @Insert({
             "INSERT INTO user (account, phone, password, status, create_time)",
             "VALUES (#{account}, #{phone}, #{password}, #{status}, #{createTime})"
     })
     void insert(User user);
+
+    @Insert({
+            "INSERT INTO user (account, email, password, status, create_time)",
+            "VALUES (#{account}, #{email}, #{password}, #{status}, #{createTime})"
+    })
+    void insertByEmail(User user);
+
 
     @Select("SELECT password FROM user WHERE account = #{account} AND deleted_at IS NULL")
     String selectPasswordByAccount(@Param("account") String account);
@@ -54,4 +64,7 @@ public interface UserMapper {
 
     @Select("SELECT status FROM user WHERE id = #{id} AND deleted_at IS NULL")
     int selectUserStatusById(@Param("id") Long id);
+
+    @Select("SELECT id FROM user WHERE email = #{email} AND deleted_at IS NULL")
+    Long selectUserIdByEmail(String email);
 }

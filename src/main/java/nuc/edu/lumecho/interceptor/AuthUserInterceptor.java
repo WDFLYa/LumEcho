@@ -10,6 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.TimeUnit;
 
 
 @Component
@@ -18,6 +19,7 @@ public class AuthUserInterceptor implements HandlerInterceptor {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    private static final long TOKEN_EXPIRE_MINUTES = 30;
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String authHeader = request.getHeader("Authorization");
@@ -35,6 +37,8 @@ public class AuthUserInterceptor implements HandlerInterceptor {
         }
 
         WdfUserContext.setCurrentUserId(Long.valueOf(userId));
+
+        stringRedisTemplate.expire(key, TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
 
         return true;
     }

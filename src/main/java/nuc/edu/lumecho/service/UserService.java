@@ -13,10 +13,12 @@ import java.util.List;
 public interface UserService {
     LoginResponse loginByAccount(UserAccountLoginRequest userAccountLoginRequest);
     LoginResponse loginByPhone(UserPhoneLoginRequest userPhoneLoginRequest);
+    LoginResponse loginByEmail(UserEmailLoginRequest userEmailLoginRequest);
     void updateUserInfo(UserUpdateRequest userUpdateRequest);
     void softDeleteCurrentUser();
     void completeAccount(CompleteAccountRequest completeAccountRequest);
     void completePhone(CompletePhoneRequest completePhoneRequest);
+    void completeEmail(CompleteEmailRequest completeEmailRequest);
     UserBaseInfoResponse selectUserBaseInfoById();
     UserBaseInfoResponse selectUserBaseInfo(Long id);
 
